@@ -6,7 +6,7 @@ const config = {
     },
     // Production (Railway)
     production: {
-        apiBaseUrl: 'https://your-app-name.railway.app' // Replace with your actual Railway URL
+        apiBaseUrl: 'https://artistic-hope-production.up.railway.app' // ⚠️ REPLACE WITH YOUR ACTUAL RAILWAY URL!
     }
 };
 
