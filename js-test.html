@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JS Test</title>
+</head>
+<body>
+    <h1>JavaScript Test</h1>
+    <div id="status">Loading...</div>
+    
+    <script>
+        console.log('JavaScript is loading...');
+        
+        // Test basic functionality
+        document.getElementById('status').innerHTML = 'JavaScript loaded successfully!';
+        
+        // Test if our main script variables are available
+        setTimeout(function() {
+            const statusDiv = document.getElementById('status');
+            
+            if (typeof projects !== 'undefined') {
+                statusDiv.innerHTML += '<br>✅ Projects object found';
+                statusDiv.innerHTML += '<br>Projects count: ' + Object.keys(projects).length;
+                
+                if (projects.monshape) {
+                    statusDiv.innerHTML += '<br>✅ Monshape project found';
+                } else {
+                    statusDiv.innerHTML += '<br>❌ Monshape project missing';
+                }
+                
+                if (projects.sealuminati) {
+                    statusDiv.innerHTML += '<br>✅ Sealuminati project found';
+                } else {
+                    statusDiv.innerHTML += '<br>❌ Sealuminati project missing';
+                }
+            } else {
+                statusDiv.innerHTML += '<br>❌ Projects object not found - script.js not loading properly';
+            }
+        }, 1000);
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

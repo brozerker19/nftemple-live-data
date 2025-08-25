@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Blue Chip Codex</title>
+    <link rel="icon" type="image/webp" href="favicon.webp">
+    <link rel="stylesheet" href="styles.css">
+    <script src="config.js"></script>
+    <script src="script.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-shapes">
+        <div class="shape shape-circle"></div>
+        <div class="shape shape-square"></div>
+        <div class="shape shape-triangle"></div>
+        <div class="shape shape-circle"></div>
+        <div class="shape shape-square"></div>
+        <div class="shape shape-triangle"></div>
+        <div class="shape shape-circle"></div>
+        <div class="shape shape-square"></div>
+    </div>
+    <div class="container">
+        <!-- Homepage View -->
+        <div id="homepage" class="view active">
+            <header>
+                <h1>NFTemple</h1>
+                <p>Discover the world of Monad NFTs</p>
+            </header>
+            
+            <!-- Search Bar -->
+            <div class="search-container">
+                <input
+                    type="text"
+                    id="project-search"
+                    placeholder="Search your favorite projects"
+                    autocomplete="off"
+                    spellcheck="false"
+                    aria-label="Search projects"
+                />
+            </div>
+            
+            <!-- Filter and Sort Bar -->
+            <div class="filter-container">
+                <div class="sort-section">
+                    <label class="filter-label">Sort by:</label>
+                    <select id="sort-select" class="sort-select">
+                        <option value="default">Default Order</option>
+                        <option value="followers-desc">Followers (High to Low)</option>
+                        <option value="followers-asc">Followers (Low to High)</option>
+                        <option value="volume-desc">Volume (High to Low)</option>
+                        <option value="volume-asc">Volume (Low to High)</option>
+                        <option value="name-asc">Name (A to Z)</option>
+                        <option value="name-desc">Name (Z to A)</option>
+                    </select>
+                    
+                    <div class="action-buttons">
+                        <div class="badge-info-container">
+                            <button class="badge-info-button">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M12 16v-4"/>
+                                    <path d="M12 8h.01"/>
+                                </svg>
+                                Badge Info
+                            </button>
+                            <div class="badge-info-popup">
+                                <div class="badge-info-content">
+                                    <h3 class="badge-info-title">Badge Milestones</h3>
+                                    <div class="badge-categories">
+                                        <div class="badge-category">
+                                            <div class="category-header">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="category-icon">
+                                                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                                                </svg>
+                                                <span class="category-title">X Followers</span>
+                                            </div>
+                                            <div class="milestone-list">
+                                                <div class="milestone-item">
+                                                    <div class="milestone-badge diamond">Diamond</div>
+                                                    <span class="milestone-req">100K+</span>
+                                                </div>
+                                                <div class="milestone-item">
+                                                    <div class="milestone-badge platinum">Platinum</div>
+                                                    <span class="milestone-req">50K+</span>
+                                                </div>
+                                                <div class="milestone-item">
+                                                    <div class="milestone-badge gold">Gold</div>
+                                                    <span class="milestone-req">25K+</span>
+                                                </div>
+                                                <div class="milestone-item">
+                                                    <div class="milestone-badge silver">Silver</div>
+                                                    <span class="milestone-req">10K+</span>
+                                                </div>
+                                                <div class="milestone-item">
+                                                    <div class="milestone-badge bronze">Bronze</div>
+                                                    <span class="milestone-req">5K+</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="badge-category">
+                                            <div class="category-header">
+                                                <img src="magic_eden logo.png" alt="Magic Eden" class="category-icon">
+                                                <span class="category-title">Volume Traded</span>
+                                            </div>
+                                            <div class="milestone-list">
+                                                <div class="milestone-item">
+                                                    <div class="milestone-badge diamond">Diamond</div>
+                                                    <span class="milestone-req">2.5M+</span>
+                                                </div>
+                                                <div class="milestone-item">
+                                                    <div class="milestone-badge platinum">Platinum</div>
+                                                    <span class="milestone-req">1.5M+</span>
+                                                </div>
+                                                <div class="milestone-item">
+                                                    <div class="milestone-badge gold">Gold</div>
+                                                    <span class="milestone-req">1M+</span>
+                                                </div>
+                                                <div class="milestone-item">
+                                                    <div class="milestone-badge silver">Silver</div>
+                                                    <span class="milestone-req">500K+</span>
+                                                </div>
+                                                <div class="milestone-item">
+                                                    <div class="milestone-badge bronze">Bronze</div>
+                                                    <span class="milestone-req">250K+</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="badge-category">
+                                            <div class="category-header">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="category-icon">
+                                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                                </svg>
+                                                <span class="category-title">Special Badges</span>
+                                            </div>
+                                            <div class="milestone-list">
+                                                <div class="milestone-item">
+                                                    <div class="milestone-badge og">OG</div>
+                                                    <span class="milestone-req">Pre-Feb 19, 2025</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="tier-maker-section">
+                            <a href="tier-maker.html" class="tier-maker-button">
+                                Create Tier List
+                            </a>
+                        </div>
+                        
+                        <div class="memory-game-section">
+                            <a href="memory-game.html" class="memory-game-button">
+                                Match the NFTs!
+                            </a>
+                        </div>
+                        
+                        <div class="whitelist-checker-section">
+                            <a href="whitelist-checker.html" class="whitelist-checker-button">
+                                WL Checker
+                            </a>
+                        </div>
+                        
+                                <!-- Floor Price Test button temporarily hidden
+        <div class="floor-price-test-section">
+            <a href="floor-price-test.html" class="floor-price-test-button">
+                Floor Price Test
+            </a>
+        </div>
+        -->
+                    </div>
+                </div>
+                
+
+            </div>
+            
+            <div class="projects-grid">
+                <div class="project-banner" data-project="chog">
+                    <div class="project-badges">
+                        <!-- Badges will be populated by JavaScript -->
+                    </div>
+                    <div class="banner-image">
+                        <img src="chog/x banner.jpeg" alt="Chog">
+                        <div class="project-name-overlay">
+                            <span class="project-name">CHOG</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="overnads">
+                    <div class="banner-image">
+                        <img src="overnads/x banner.jpeg" alt="Overnads">
+                        <div class="project-name-overlay">
+                            <span class="project-name">OVERNADS</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="spiky">
+                    <div class="banner-image">
+                        <img src="spiky/x banner.jpeg" alt="Spiky">
+                        <div class="project-name-overlay">
+                            <span class="project-name">SPIKY NADS</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="blench">
+                    <div class="banner-image">
+                        <img src="blench/x banner.jpeg" alt="Blench">
+                        <div class="project-name-overlay">
+                            <span class="project-name">BLENCH</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="daks">
+                    <div class="banner-image">
+                        <img src="daks/x banner.jpeg" alt="Daks">
+                        <div class="project-name-overlay">
+                            <span class="project-name">THE DAKS</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="slmnd">
+                    <div class="banner-image">
+                        <img src="slmnd/x banner.jpeg" alt="Slmnd">
+                        <div class="project-name-overlay">
+                            <span class="project-name">SLMND</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="chogstar">
+                    <div class="banner-image">
+                        <img src="chogstar/x banner.jpeg" alt="Chogstar">
+                        <div class="project-name-overlay">
+                            <span class="project-name">LIL CHOGSTARS</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="mondana baddies">
+                    <div class="banner-image">
+                        <img src="mondana baddies/x banner.jpeg" alt="Mondana Baddies">
+                        <div class="project-name-overlay">
+                            <span class="project-name">MONDANA BADDIES</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="bobr">
+                    <div class="banner-image">
+                        <img src="bobr/x banner.jpeg" alt="Bobr">
+                        <div class="project-name-overlay">
+                            <span class="project-name">BOBR</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="10k squad">
+                    <div class="banner-image">
+                        <img src="10k squad/x banner.jpeg" alt="The 10k Squad">
+                        <div class="project-name-overlay">
+                            <span class="project-name">THE 10K SQUAD</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="meowwnads">
+                    <div class="banner-image">
+                        <img src="meowwnads/x banner.jpeg" alt="Meowwnads">
+                        <div class="project-name-overlay">
+                            <span class="project-name">MEOWWNADS</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="mouch">
+                    <div class="banner-image">
+                        <img src="mouch/x banner.jpeg" alt="Mouch">
+                        <div class="project-name-overlay">
+                            <span class="project-name">LA MOUCH</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="monadverse">
+                    <div class="banner-image">
+                        <img src="monadverse/x banner.jpeg" alt="Monadverse">
+                        <div class="project-name-overlay">
+                            <span class="project-name">MONADVERSE</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="chewy">
+                    <div class="banner-image">
+                        <img src="chewy/x banner.jpeg" alt="Chewy">
+                        <div class="project-name-overlay">
+                            <span class="project-name">CHEWY</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="skrumpeys">
+                    <div class="banner-image">
+                        <img src="skrumpeys/x banner.jpeg" alt="Skrumpeys">
+                        <div class="project-name-overlay">
+                            <span class="project-name">SKRUMPEYS</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="llamao">
+                    <div class="banner-image">
+                        <img src="llamao/x banner.jpeg" alt="Llamao">
+                        <div class="project-name-overlay">
+                            <span class="project-name">LLAMAO</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="monshape">
+                    <div class="banner-image">
+                        <img src="monshape/x banner.jpeg" alt="Monshape">
+                        <div class="project-name-overlay">
+                            <span class="project-name">MONSHAPE</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="sealuminati">
+                    <div class="banner-image">
+                        <img src="sealuminati/x banner.jpeg" alt="Sealuminati">
+                        <div class="project-name-overlay">
+                            <span class="project-name">SEALUMINATI</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="realnads">
+                    <div class="banner-image">
+                        <img src="realnads/x banner.jpeg" alt="Real Nads">
+                        <div class="project-name-overlay">
+                            <span class="project-name">REALNADS</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="blocknads">
+                    <div class="banner-image">
+                        <img src="blocknads/x banner.jpeg" alt="Block Nads">
+                        <div class="project-name-overlay">
+                            <span class="project-name">BLOCKNADS</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="r3tards">
+                    <div class="banner-image">
+                        <img src="r3tards/x banner.jpeg" alt="R3tards">
+                        <div class="project-name-overlay">
+                            <span class="project-name">R3TARDS</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="breath of estova">
+                    <div class="banner-image">
+                        <img src="breath of estova/x banner.jpeg" alt="Breath of Estova">
+                        <div class="project-name-overlay">
+                            <span class="project-name">BREATH OF ESTOVA</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="mopnads">
+                    <div class="banner-image">
+                        <img src="mopnads/x banner.jpeg" alt="Mop Nads">
+                        <div class="project-name-overlay">
+                            <span class="project-name">MOPNADS</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="owls">
+                    <div class="banner-image">
+                        <img src="owls/x banner.jpeg" alt="Owls">
+                        <div class="project-name-overlay">
+                            <span class="project-name">OWLS</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="monbeans">
+                    <div class="banner-image">
+                        <img src="monbeans/x banner.jpeg" alt="Mon Beans">
+                        <div class="project-name-overlay">
+                            <span class="project-name">MONBEANS</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="roarnads">
+                    <div class="banner-image">
+                        <img src="roarnads/x banner.jpeg" alt="Roar Nads">
+                        <div class="project-name-overlay">
+                            <span class="project-name">ROARNADS</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="mon amurz">
+                    <div class="banner-image">
+                        <img src="mon amurz/x banner.jpeg" alt="Mon Amurz">
+                        <div class="project-name-overlay">
+                            <span class="project-name">MON AMURZ</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-banner" data-project="monpunks">
+                    <div class="banner-image">
+                        <img src="monpunks/x banner.jpeg" alt="Monpunks">
+                        <div class="project-name-overlay">
+                            <span class="project-name">MONPUNKS</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Developer Credit Section -->
+            <div class="developer-credit">
+                <p class="credit-text">Built by bigchog with love for the Monad community.</p>
+                <div class="bottom-links">
+                    <a href="https://x.com/bigchogenergy1" target="_blank" class="developer-link">
+                        <img src="homepage buttons logo/bigchog.jpg" alt="Bigchog" class="developer-icon">
+                        bigchog - Website Dev
+                    </a>
+                    <div class="official-links">
+                        <a href="https://x.com/monad" target="_blank" class="official-link">
+                            <img src="homepage buttons logo/monad.jpg" alt="Monad" class="official-icon">
+                            Monad X account
+                        </a>
+                        <a href="https://x.com/wagmigently" target="_blank" class="official-link">
+                            <img src="homepage buttons logo/karma.jpg" alt="Karma" class="official-icon">
+                            Karma - Monad NFT Lead
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Detail View -->
+        <div id="project-detail" class="view">
+            <div class="project-content">
+                <button class="back-button" onclick="goBack()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                    Homepage
+                </button>
+                
+                <div class="project-header">
+                    <div class="project-banner-background">
+                        <img id="project-banner-bg" src="" alt="">
+                    </div>
+                    <div class="project-banner-large">
+                        <img id="project-banner-img" src="" alt="">
+                    </div>
+                    <div class="project-info">
+                        <h2 id="project-name"></h2>
+                        <p id="project-description" class="project-description"></p>
+                    </div>
+                    <div id="floor-price-collections" class="floor-price-collections">
+                        <!-- Floor price collections will be populated by JavaScript -->
+                    </div>
+                    
+                    <div class="social-links">
+                        <a id="x-link" href="" target="_blank" class="social-btn">
+                            <img src="x_logo.png" alt="X" class="social-btn-icon">
+                            X
+                        </a>
+                        <a id="discord-link" href="" target="_blank" class="social-btn">
+                            <img src="discord_logo.png" alt="Discord" class="social-btn-icon">
+                            Discord
+                        </a>
+                        <a href="" id="website-link" class="social-btn" target="_blank" style="display: none;">
+                            <img src="" alt="Website" class="social-btn-icon">
+                            Website
+                        </a>
+                        <button type="button" id="whitelist-button" class="social-btn whitelist-btn">
+                            WL Info
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="team-section">
+                    <h3>Team</h3>
+                    <div id="team-members" class="team-grid">
+                        <!-- Team members will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="art-section">
+                    <h3>Art Sneak Peeks</h3>
+                    <div id="art-gallery" class="art-gallery">
+                        <!-- Art sneak peeks will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Whitelist Information Modal -->
+        <div id="whitelist-modal" class="whitelist-modal">
+            <div class="whitelist-modal-content">
+                <div class="whitelist-modal-header">
+                    <h3 id="whitelist-modal-title">Whitelist Information</h3>
+                    <button class="whitelist-modal-close">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 6L6 18M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="whitelist-modal-body">
+                    <p id="whitelist-modal-description" class="whitelist-description"></p>
+                    
+                    <div class="whitelist-collections">
+                        <h4>Collections</h4>
+                        <div id="whitelist-collections-list" class="collections-list">
+                            <!-- Collections will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 

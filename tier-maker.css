@@ -1,0 +1,636 @@
+/* Tier Maker Specific Styles */
+
+/* Back Button Styling - Matching Memory Game */
+.back-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.12), rgba(139, 92, 246, 0.08));
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 16px rgba(168, 85, 247, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.back-button:hover {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(139, 92, 246, 0.15));
+    border-color: rgba(168, 85, 247, 0.5);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 24px rgba(168, 85, 247, 0.25), 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.back-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+    transition: left 0.6s ease;
+}
+
+.back-button:hover::before {
+    left: 100%;
+}
+
+.back-button svg {
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+.back-button:hover svg {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* Header Section */
+.tier-maker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    margin-bottom: 40px;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.tier-maker-title {
+    text-align: center;
+    flex: 1;
+    min-width: 300px;
+}
+
+.tier-maker-title h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #ffffff, #e2e8f0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.tier-maker-title p {
+    color: #94a3b8;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+#tier-list-title {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 12px 20px;
+    color: #ffffff;
+    font-size: 1rem;
+    text-align: center;
+    max-width: 300px;
+    width: 100%;
+    outline: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+#tier-list-title::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+    opacity: 1;
+    font-style: italic;
+}
+
+#tier-list-title:focus {
+    border-color: rgba(168, 85, 247, 0.5);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1);
+}
+
+.tier-maker-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.action-btn:hover {
+    background: rgba(168, 85, 247, 0.15);
+    border-color: rgba(168, 85, 247, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(168, 85, 247, 0.2);
+}
+
+.share-btn:hover {
+    background: rgba(29, 161, 242, 0.15);
+    border-color: rgba(29, 161, 242, 0.4);
+}
+
+/* Tier Maker Content */
+.tier-maker-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Sidebar Layout */
+.sidebar-layout {
+    display: flex;
+    gap: 30px;
+    min-height: 600px;
+    align-items: flex-start;
+}
+
+/* Tiers Section (Left Side) */
+.tiers-section {
+    flex: 0 0 65%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Projects Section (Right Side) */
+.projects-section {
+    flex: 0 0 35%;
+    position: sticky;
+    top: 20px;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+/* Tier Rows */
+.tier-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tier-row {
+    display: flex;
+    align-items: stretch;
+    min-height: 80px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tier-row.drag-over {
+    border-color: rgba(168, 85, 247, 0.6);
+    background: rgba(168, 85, 247, 0.08);
+    transform: translateX(5px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(168, 85, 247, 0.2);
+}
+
+.tier-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    flex-shrink: 0;
+    border-radius: 12px 0 0 12px;
+}
+
+/* Tier Colors */
+.tier-s { background: linear-gradient(135deg, #ff6b6b, #ff5722); }
+.tier-a { background: linear-gradient(135deg, #ff9800, #f57c00); }
+.tier-b { background: linear-gradient(135deg, #ffeb3b, #fbc02d); }
+.tier-c { background: linear-gradient(135deg, #8bc34a, #689f38); }
+.tier-d { background: linear-gradient(135deg, #03a9f4, #0277bd); }
+.tier-e { background: linear-gradient(135deg, #9c27b0, #7b1fa2); }
+.tier-f { background: linear-gradient(135deg, #607d8b, #455a64); }
+
+.tier-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    min-height: 56px;
+    flex-wrap: wrap;
+    background: rgba(255, 255, 255, 0.02);
+    touch-action: none; /* Allow touch events to be handled by JS */
+    border-radius: 0 12px 12px 0;
+    position: relative;
+}
+
+.tier-content.drag-over {
+    background: rgba(168, 85, 247, 0.15);
+    box-shadow: inset 0 0 20px rgba(168, 85, 247, 0.2);
+}
+
+.tier-content:empty::after {
+    content: 'Drop projects here';
+    color: rgba(255, 255, 255, 0.4);
+    font-style: italic;
+    font-size: 0.9rem;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+/* Mobile empty tier message */
+@media (max-width: 768px) {
+    .tier-content:empty::after {
+        content: 'Tap to place projects here';
+        font-size: 0.85rem;
+    }
+}
+
+/* Project Items */
+.project-item {
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: grab;
+    transition: all 0.3s ease;
+    position: relative;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    touch-action: none; /* Prevent default touch behaviors */
+    user-select: none; /* Prevent text selection */
+    -webkit-user-select: none;
+    -webkit-touch-callout: none; /* Prevent callout on iOS */
+}
+
+.project-item:hover {
+    transform: scale(1.05);
+    border-color: rgba(168, 85, 247, 0.5);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.project-item:active {
+    cursor: grabbing;
+    transform: scale(0.95);
+}
+
+.project-item.dragging {
+    opacity: 0.5;
+    transform: rotate(5deg);
+}
+
+/* Mobile selection system */
+.project-item.mobile-selected {
+    border-color: #00ff88;
+    background: rgba(0, 255, 136, 0.1);
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.4), 0 8px 25px rgba(0, 0, 0, 0.3);
+    animation: pulse-selection 1.5s infinite;
+}
+
+@keyframes pulse-selection {
+    0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.4), 0 8px 25px rgba(0, 0, 0, 0.3); }
+    50% { box-shadow: 0 0 30px rgba(0, 255, 136, 0.6), 0 8px 25px rgba(0, 0, 0, 0.3); }
+}
+
+/* Mobile tier click feedback */
+@media (hover: none) and (pointer: coarse) {
+    .tier-row.mobile-clickable {
+        cursor: pointer;
+    }
+    
+    .tier-row.mobile-clickable:active {
+        transform: scale(0.98);
+        background: rgba(168, 85, 247, 0.1);
+    }
+    
+    .project-item:active {
+        transform: scale(1.05);
+        border-color: rgba(168, 85, 247, 0.7);
+    }
+}
+
+.project-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.project-item:hover img {
+    transform: scale(1.1);
+}
+
+/* Project Name Tooltip */
+.project-item::after {
+    content: attr(data-name);
+    position: absolute;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+}
+
+.project-item:hover::after {
+    opacity: 1;
+}
+
+/* Projects Pool */
+.projects-pool {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 20px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.projects-pool h3 {
+    color: #ffffff;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.projects-hint {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    text-align: center;
+    margin-bottom: 20px;
+    font-style: italic;
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 12px;
+    justify-items: center;
+    flex: 1;
+    align-content: start;
+    max-height: 100%;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+/* Custom scrollbar for projects grid */
+.projects-grid::-webkit-scrollbar {
+    width: 6px;
+}
+
+.projects-grid::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+}
+
+.projects-grid::-webkit-scrollbar-thumb {
+    background: rgba(168, 85, 247, 0.3);
+    border-radius: 3px;
+}
+
+.projects-grid::-webkit-scrollbar-thumb:hover {
+    background: rgba(168, 85, 247, 0.5);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .tier-maker-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+    
+    .tier-maker-title {
+        min-width: auto;
+    }
+    
+    .tier-maker-title h1 {
+        font-size: 2rem;
+    }
+    
+    .tier-maker-actions {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    /* Mobile: Stack layout vertically */
+    .sidebar-layout {
+        flex-direction: column;
+        gap: 25px;
+        min-height: auto;
+        padding: 0 15px; /* Add consistent container padding */
+        box-sizing: border-box; /* Ensure padding doesn't overflow */
+        width: 100%;
+    }
+    
+    .tiers-section {
+        flex: 1;
+        order: 2;
+        width: 100%;
+    }
+    
+    .tier-rows {
+        width: 100%;
+    }
+    
+    .projects-section {
+        flex: 1;
+        order: 1;
+        position: static;
+        max-height: none;
+        margin-bottom: 0;
+        margin: 0; /* Remove negative margin */
+        width: 100%; /* Use full container width */
+    }
+    
+    /* Full width tier rows for mobile */
+    .tier-row {
+        min-height: 80px;
+        margin: 0; /* Remove negative margin */
+        border-radius: 8px;
+        width: 100%; /* Use full container width */
+        max-width: none;
+        display: flex; /* Ensure flex display for proper width distribution */
+        box-sizing: border-box; /* Include padding and borders in width calculation */
+    }
+    
+    .tier-label {
+        width: 60px;
+        font-size: 1.6rem;
+        border-radius: 8px 0 0 8px;
+    }
+    
+    .tier-content {
+        padding: 12px;
+        min-height: 56px;
+        border-radius: 0 8px 8px 0;
+        flex: 1; /* Take up remaining space in flex container */
+        box-sizing: border-box; /* Ensure padding doesn't overflow */
+        min-width: 0; /* Allow flex item to shrink below content size */
+    }
+    
+    /* Mobile project items - larger and better spaced */
+    .project-item {
+        width: 65px;
+        height: 65px;
+        border-radius: 10px;
+    }
+    
+    /* Better mobile projects grid - more like original */
+    .projects-grid {
+        grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+        gap: 15px;
+        padding: 0;
+        max-height: 250px;
+        overflow-y: auto;
+    }
+    
+    .projects-pool {
+        padding: 20px 15px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        margin: 0; /* No additional margin since parent already extends to edges */
+        width: 100%;
+    }
+    
+    .projects-pool h3 {
+        font-size: 1.4rem;
+        margin-bottom: 10px;
+    }
+    
+    .projects-hint {
+        font-size: 0.9rem;
+        margin-bottom: 18px;
+        color: rgba(255, 255, 255, 0.7);
+    }
+    
+    /* Hide desktop hint on mobile */
+    .desktop-hint {
+        display: none !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .tier-maker-title h1 {
+        font-size: 1.8rem;
+    }
+    
+    .tier-label {
+        width: 50px;
+        font-size: 1.3rem;
+    }
+    
+    .project-item {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .projects-grid {
+        grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+        gap: 10px;
+    }
+    
+    .action-btn {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Loading State */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    color: #94a3b8;
+    font-size: 1.1rem;
+}
+
+/* Empty State */
+.empty-tier {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    font-style: italic;
+    min-height: 70px;
+}
+
+/* Mobile touch improvements */
+@media (max-width: 768px) {
+    .project-item {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+        touch-action: manipulation;
+        cursor: pointer;
+        transition: transform 0.1s ease, opacity 0.2s ease;
+    }
+    
+    .project-item:active {
+        transform: scale(0.95);
+    }
+    
+    .project-item.mobile-selected {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
+    }
+    
+    .tier-row {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+        touch-action: manipulation;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+    
+    .tier-row:active {
+        background-color: rgba(139, 92, 246, 0.1);
+    }
+    
+    .action-btn {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+        touch-action: manipulation;
+        min-height: 44px;
+        min-width: 44px;
+        transition: transform 0.1s ease;
+    }
+    
+    .action-btn:active {
+        transform: scale(0.95);
+    }
+    
+    .back-button {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+        touch-action: manipulation;
+        min-height: 44px;
+        min-width: 44px;
+    }
+}

@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floor Price Test - The Blue Chip Codex</title>
+    <link rel="icon" type="image/webp" href="favicon.webp">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="config.js"></script>
+    <script src="floor-price-test.js" defer></script>
+    <style>
+        .floor-price-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .project-info {
+            flex: 1;
+        }
+        
+        .project-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+        
+        .project-description {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+        
+        .vertical-divider {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.3), transparent);
+        }
+        
+        .floor-price-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 120px;
+        }
+        
+        .floor-price-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .floor-price-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #00ff88;
+            margin-bottom: 4px;
+        }
+        
+        .floor-price-loading {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            font-style: italic;
+        }
+        
+        .floor-price-no-listings {
+            font-size: 16px;
+            color: #ffaa00;
+            font-weight: 500;
+        }
+        
+        .floor-price-error {
+            font-size: 12px;
+            color: #ff6b6b;
+        }
+        
+        .last-updated {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.4);
+            text-align: center;
+        }
+        
+        .refresh-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .refresh-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .refresh-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .test-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .test-header h1 {
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        
+        .test-header p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-shapes">
+        <div class="shape shape-circle"></div>
+        <div class="shape shape-square"></div>
+        <div class="shape shape-triangle"></div>
+        <div class="shape shape-circle"></div>
+        <div class="shape shape-square"></div>
+        <div class="shape shape-triangle"></div>
+        <div class="shape shape-circle"></div>
+        <div class="shape shape-square"></div>
+    </div>
+    
+    <div class="container">
+        <div class="test-header">
+            <h1>Floor Price Test</h1>
+            <p>Testing live floor price integration with Magic Eden API</p>
+            <p style="font-size: 14px; color: rgba(255, 255, 255, 0.6); margin-top: 10px;">
+                <strong>Note:</strong> This test attempts to fetch real floor price data from Magic Eden API and alternative sources.
+                <br><strong>Prices are displayed in MON (Monad's native token).</strong>
+                <br><strong>"No listings" means the collection exists but has no NFTs currently for sale.</strong>
+                <br><strong>⚠️ Monad collections may not be fully supported by Magic Eden API yet.</strong>
+            </p>
+            <a href="index.html" class="back-link">← Back to Main Page</a>
+        </div>
+        
+        <!-- Test Project: Chog Mystery Chest -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Chog Mystery Chest</div>
+                <div class="project-description">The Mascot of Monad | Powered by the monad community | NFTs and more 😈</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="chog-floor-price" class="floor-price-value">--</div>
+                <div id="chog-last-updated" class="last-updated">--</div>
+                <button id="chog-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+        
+        <!-- Test Project: Spiky Nads -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Spiky Nads</div>
+                <div class="project-description">Meet Spiky Nads – the sharp edge of pixel art NFTs on monad. SIUUUU</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="spiky-floor-price" class="floor-price-value">--</div>
+                <div id="spiky-last-updated" class="last-updated">--</div>
+                <button id="spiky-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+        
+        <!-- Test Project: Blench Pass -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Blench Pass</div>
+                <div class="project-description">AT ALL COSTS</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="blench-floor-price" class="floor-price-value">--</div>
+                <div id="blench-last-updated" class="last-updated">--</div>
+                <button id="blench-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Chog Pass -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Chog Pass</div>
+                <div class="project-description">Grants 1 x GTD Whitelist</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="chog-pass-floor-price" class="floor-price-value">--</div>
+                <div id="chog-pass-last-updated" class="last-updated">--</div>
+                <button id="chog-pass-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: SpiKeys -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">SpiKeys</div>
+                <div class="project-description">Grants 1 x GTD Whitelist</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="spikeys-floor-price" class="floor-price-value">--</div>
+                <div id="spikeys-last-updated" class="last-updated">--</div>
+                <button id="spikeys-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Lil Chogstars Superstarlist Pass -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Lil Chogstars Superstarlist Pass</div>
+                <div class="project-description">3 Passes grant 1 x GTD Whitelist</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="chogstar-pass-floor-price" class="floor-price-value">--</div>
+                <div id="chogstar-pass-last-updated" class="last-updated">--</div>
+                <button id="chogstar-pass-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Lil Chogstars -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Lil Chogstars</div>
+                <div class="project-description">Lil Chogstars NFT Collection</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="chogstar-nfts-floor-price" class="floor-price-value">--</div>
+                <div id="chogstar-nfts-last-updated" class="last-updated">--</div>
+                <button id="chogstar-nfts-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Sealuminati Testnetooor -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Sealuminati Testnetooor</div>
+                <div class="project-description">Sealuminati Testnet Collection</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="sealuminati-testnetooor-floor-price" class="floor-price-value">--</div>
+                <div id="sealuminati-testnetooor-last-updated" class="last-updated">--</div>
+                <button id="sealuminati-testnetooor-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Mondana Baddies Eye Chain -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Mondana Baddies Eye Chain</div>
+                <div class="project-description">Mondana Baddies Eye Chain Collection</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="mondana-eye-chain-floor-price" class="floor-price-value">--</div>
+                <div id="mondana-eye-chain-last-updated" class="last-updated">--</div>
+                <button id="mondana-eye-chain-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Mondana Baddies: Baddie Eye -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Mondana Baddies: Baddie Eye</div>
+                <div class="project-description">Grants 1 x GTD Whitelist</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="mondana-baddie-eye-floor-price" class="floor-price-value">--</div>
+                <div id="mondana-baddie-eye-last-updated" class="last-updated">--</div>
+                <button id="mondana-baddie-eye-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Overnads: Whitelist Pass -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Overnads: Whitelist Pass</div>
+                <div class="project-description">Overnads Whitelist Pass Collection</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="overnads-pass-floor-price" class="floor-price-value">--</div>
+                <div id="overnads-pass-last-updated" class="last-updated">--</div>
+                <button id="overnads-pass-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: BOBR -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">BOBR</div>
+                <div class="project-description">First, only, official BOBR NFT on Monad</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="bobr-floor-price" class="floor-price-value">--</div>
+                <div id="bobr-last-updated" class="last-updated">--</div>
+                <button id="bobr-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: The10kSquad -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">The10kSquad</div>
+                <div class="project-description">The10kSquad NFT Collection</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="10k-squad-floor-price" class="floor-price-value">--</div>
+                <div id="10k-squad-last-updated" class="last-updated">--</div>
+                <button id="10k-squad-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: EGGcellent -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">EGGcellent</div>
+                <div class="project-description">EGGcellent NFT Collection</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="eggcellent-floor-price" class="floor-price-value">--</div>
+                <div id="eggcellent-last-updated" class="last-updated">--</div>
+                <button id="eggcellent-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: 10k x Fantasy Pass -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">10k x Fantasy Pass</div>
+                <div class="project-description">10k x Fantasy Pass Collection</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="10k-fantasy-pass-floor-price" class="floor-price-value">--</div>
+                <div id="10k-fantasy-pass-last-updated" class="last-updated">--</div>
+                <button id="10k-fantasy-pass-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Meowwnads Testnet Collection -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Meowwnads Testnet Collection</div>
+                <div class="project-description">Meowwnads Testnet NFT Collection</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="meowwnads-testnet-floor-price" class="floor-price-value">--</div>
+                <div id="meowwnads-testnet-last-updated" class="last-updated">--</div>
+                <button id="meowwnads-testnet-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Meowwnads | OG Pass -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Meowwnads | OG Pass</div>
+                <div class="project-description">Meowwnads OG Pass Collection</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="meowwnads-og-pass-floor-price" class="floor-price-value">--</div>
+                <div id="meowwnads-og-pass-last-updated" class="last-updated">--</div>
+                <button id="meowwnads-og-pass-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: La Mouch -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">La Mouch</div>
+                <div class="project-description">Bringing the swarm to life on Monad</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="la-mouch-floor-price" class="floor-price-value">--</div>
+                <div id="la-mouch-last-updated" class="last-updated">--</div>
+                <button id="la-mouch-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: La Mouch NFT -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">La Mouch NFT</div>
+                <div class="project-description">La Mouch NFT Collection</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="la-mouch-nft-floor-price" class="floor-price-value">--</div>
+                <div id="la-mouch-nft-last-updated" class="last-updated">--</div>
+                <button id="la-mouch-nft-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: LaMouch x Fantasytop Pass -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">LaMouch x Fantasytop Pass</div>
+                <div class="project-description">Grants 1 x GTD Whitelist</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="lamouch-fantasytop-pass-floor-price" class="floor-price-value">--</div>
+                <div id="lamouch-fantasytop-pass-last-updated" class="last-updated">--</div>
+                <button id="lamouch-fantasytop-pass-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Monadverse Genesis Hatch -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Monadverse Genesis Hatch</div>
+                <div class="project-description">Grants 1 x GTD Whitelist</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="monadverse-genesis-hatch-floor-price" class="floor-price-value">--</div>
+                <div id="monadverse-genesis-hatch-last-updated" class="last-updated">--</div>
+                <button id="monadverse-genesis-hatch-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Momo -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Momo</div>
+                <div class="project-description">Grants 1 x GTD Whitelist</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="momo-floor-price" class="floor-price-value">--</div>
+                <div id="momo-last-updated" class="last-updated">--</div>
+                <button id="momo-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Chewy -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Chewy</div>
+                <div class="project-description">Chewy NFT Collection</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="chewy-floor-price" class="floor-price-value">--</div>
+                <div id="chewy-last-updated" class="last-updated">--</div>
+                <button id="chewy-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Chewy x Fantasytop -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Chewy x Fantasytop</div>
+                <div class="project-description">Chewy x Fantasytop Collection</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="chewy-fantasytop-floor-price" class="floor-price-value">--</div>
+                <div id="chewy-fantasytop-last-updated" class="last-updated">--</div>
+                <button id="chewy-fantasytop-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Skrumpets -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Skrumpets</div>
+                <div class="project-description">Grants 1 x GTD Whitelist</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="skrumpets-floor-price" class="floor-price-value">--</div>
+                <div id="skrumpets-last-updated" class="last-updated">--</div>
+                <button id="skrumpets-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: DN -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">DN</div>
+                <div class="project-description">Grants 1 x GTD Whitelist</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="dn-floor-price" class="floor-price-value">--</div>
+                <div id="dn-last-updated" class="last-updated">--</div>
+                <button id="dn-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Llamao Genesis -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Llamao Genesis</div>
+                <div class="project-description">Llamao Genesis NFT Collection</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="llamao-genesis-floor-price" class="floor-price-value">--</div>
+                <div id="llamao-genesis-last-updated" class="last-updated">--</div>
+                <button id="llamao-genesis-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Llamao x Fantasytop -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Llamao x Fantasytop</div>
+                <div class="project-description">Llamao x Fantasytop Collection</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="llamao-fantasytop-floor-price" class="floor-price-value">--</div>
+                <div id="llamao-fantasytop-last-updated" class="last-updated">--</div>
+                <button id="llamao-fantasytop-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Lost Discs -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Lost Discs</div>
+                <div class="project-description">Different WL depending on the type/color</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="lost-discs-floor-price" class="floor-price-value">--</div>
+                <div id="lost-discs-last-updated" class="last-updated">--</div>
+                <button id="lost-discs-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Monshape x Fantasy WL Pass -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Monshape x Fantasy WL Pass</div>
+                <div class="project-description">Grants 1 x GTD Whitelist</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="monshape-fantasy-wl-pass-floor-price" class="floor-price-value">--</div>
+                <div id="monshape-fantasy-wl-pass-last-updated" class="last-updated">--</div>
+                <button id="monshape-fantasy-wl-pass-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Monshape Hopium -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Monshape Hopium</div>
+                <div class="project-description">Possible raffles, limited info available</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="monshape-hopium-floor-price" class="floor-price-value">--</div>
+                <div id="monshape-hopium-last-updated" class="last-updated">--</div>
+                <button id="monshape-hopium-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: RealNads Premint Pass -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">RealNads Premint Pass</div>
+                <div class="project-description">3 NFTs = 1 x GTD Whitelist</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="realnads-premint-pass-floor-price" class="floor-price-value">--</div>
+                <div id="realnads-premint-pass-last-updated" class="last-updated">--</div>
+                <button id="realnads-premint-pass-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Blocknads -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Blocknads</div>
+                <div class="project-description">A paradigm shift. The new order of defiance</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="blocknads-floor-price" class="floor-price-value">--</div>
+                <div id="blocknads-last-updated" class="last-updated">--</div>
+                <button id="blocknads-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: r3tards -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">r3tards</div>
+                <div class="project-description">Grants 1 x GTD Whitelist</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="r3tards-floor-price" class="floor-price-value">--</div>
+                <div id="r3tards-last-updated" class="last-updated">--</div>
+                <button id="r3tards-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: r3tardv3rs3 -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">r3tardv3rs3</div>
+                <div class="project-description">Grants 1 x GTD Whitelist</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="r3tardv3rs3-floor-price" class="floor-price-value">--</div>
+                <div id="r3tardv3rs3-last-updated" class="last-updated">--</div>
+                <button id="r3tardv3rs3-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Monad Nurse -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Monad Nurse</div>
+                <div class="project-description">Grants 1 x GTD Whitelist</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="monad-nurse-floor-price" class="floor-price-value">--</div>
+                <div id="monad-nurse-last-updated" class="last-updated">--</div>
+                <button id="monad-nurse-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Legacy Eggs -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Legacy Eggs</div>
+                <div class="project-description">Start your journey in the upcoming 2D action MMORPG BoE</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="legacy-eggs-floor-price" class="floor-price-value">--</div>
+                <div id="legacy-eggs-last-updated" class="last-updated">--</div>
+                <button id="legacy-eggs-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Mystery Token -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Mystery Token</div>
+                <div class="project-description">Breath of Estova Mystery Token Collection</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="mystery-token-floor-price" class="floor-price-value">--</div>
+                <div id="mystery-token-last-updated" class="last-updated">--</div>
+                <button id="mystery-token-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Mop Nads -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Mop Nads</div>
+                <div class="project-description">Mop is coming...</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="mop-nads-floor-price" class="floor-price-value">--</div>
+                <div id="mop-nads-last-updated" class="last-updated">--</div>
+                <button id="mop-nads-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: OwlsMonad -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">OwlsMonad</div>
+                <div class="project-description">5 NFTs = GTD Whitelist / 2 NFTs = 1 FCFS</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="owls-monad-floor-price" class="floor-price-value">--</div>
+                <div id="owls-monad-last-updated" class="last-updated">--</div>
+                <button id="owls-monad-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Mon Beans -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Mon Beans</div>
+                <div class="project-description">Builder Beans</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="mon-beans-floor-price" class="floor-price-value">--</div>
+                <div id="mon-beans-last-updated" class="last-updated">--</div>
+                <button id="mon-beans-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Minimurz -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Minimurz</div>
+                <div class="project-description">ur mischievous, loving, onchain imaginary friends</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="minimurz-floor-price" class="floor-price-value">--</div>
+                <div id="minimurz-last-updated" class="last-updated">--</div>
+                <button id="minimurz-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: Monpunks NFT Badge -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">Monpunks NFT Badge</div>
+                <div class="project-description">31x31 pixel art characters built on Monad</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="monpunks-nft-badge-floor-price" class="floor-price-value">--</div>
+                <div id="monpunks-nft-badge-last-updated" class="last-updated">--</div>
+                <button id="monpunks-nft-badge-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: The Daks Fantasies -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">The Daks Fantasies</div>
+                <div class="project-description">Grants 1 x GTD Whitelist</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="daks-fantasies-floor-price" class="floor-price-value">--</div>
+                <div id="daks-fantasies-last-updated" class="last-updated">--</div>
+                <button id="daks-fantasies-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: TheDaks -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">TheDaks</div>
+                <div class="project-description">The Daks is a pfpNFT collection built on Monad</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="thedaks-floor-price" class="floor-price-value">--</div>
+                <div id="thedaks-last-updated" class="last-updated">--</div>
+                <button id="thedaks-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: SLMND Genesis -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">SLMND Genesis</div>
+                <div class="project-description">SLMND a collection of Salmonads swimming upstream</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="slmnd-genesis-floor-price" class="floor-price-value">--</div>
+                <div id="slmnd-genesis-last-updated" class="last-updated">--</div>
+                <button id="slmnd-genesis-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: SLMND Access Pass -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">SLMND Access Pass</div>
+                <div class="project-description">Grants 1 x GTD Whitelist</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="slmnd-access-pass-floor-price" class="floor-price-value">--</div>
+                <div id="slmnd-access-pass-last-updated" class="last-updated">--</div>
+                <button id="slmnd-access-pass-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Test Project: MECHA BOX -->
+        <div class="floor-price-container">
+            <div class="project-info">
+                <div class="project-title">MECHA BOX</div>
+                <div class="project-description">Grants 1 x GTD Whitelist</div>
+            </div>
+            
+            <div class="vertical-divider"></div>
+            
+            <div class="floor-price-info">
+                <div class="floor-price-label">Floor Price (MON)</div>
+                <div id="mecha-box-floor-price" class="floor-price-value">--</div>
+                <div id="mecha-box-last-updated" class="last-updated">--</div>
+                <button id="mecha-box-refresh" class="refresh-button">Refresh</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="floor-price-test.js"></script>
+</body>
+</html>

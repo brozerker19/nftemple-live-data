@@ -1,0 +1,2149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFT Memory Game - The Blue Chip Codex</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0514 0%, #1a0b2e 50%, #0a0514 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+            /* Fix mobile scrolling issues */
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: none;
+            /* Prevent mobile scroll snapping */
+            scroll-behavior: auto;
+            /* Additional mobile scroll fixes */
+            position: relative;
+            height: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 20px 0;
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: headerAppear 1s ease-out forwards;
+        }
+
+        .header-content {
+            position: relative;
+            min-height: 80px;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.12), rgba(139, 92, 246, 0.08));
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 16px rgba(168, 85, 247, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .back-button:hover {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(139, 92, 246, 0.15));
+            border-color: rgba(168, 85, 247, 0.5);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 24px rgba(168, 85, 247, 0.25), 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .back-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .back-button:hover::before {
+            left: 100%;
+        }
+
+        .back-button svg {
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .back-button:hover svg {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        @keyframes headerAppear {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 15px;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            color: #e2e8f0;
+            font-weight: 400;
+            letter-spacing: 0.01em;
+            line-height: 1.5;
+            max-width: 500px;
+            margin: 0 auto;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .level-info {
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .level-info:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .level-info h2 {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .level-info p {
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            font-weight: 400;
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.12), rgba(139, 92, 246, 0.08));
+            color: #ffffff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 16px rgba(168, 85, 247, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(139, 92, 246, 0.15));
+            border-color: rgba(168, 85, 247, 0.5);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 24px rgba(168, 85, 247, 0.25), 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn.secondary {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.12), rgba(238, 90, 36, 0.08));
+            border-color: rgba(255, 107, 107, 0.3);
+        }
+
+        .btn.secondary:hover {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(238, 90, 36, 0.15));
+            border-color: rgba(255, 107, 107, 0.5);
+            box-shadow: 0 8px 24px rgba(255, 107, 107, 0.25), 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn.success {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.12), rgba(69, 160, 73, 0.08));
+            border-color: rgba(76, 175, 80, 0.3);
+        }
+
+        .btn.success:hover {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(69, 160, 73, 0.15));
+            border-color: rgba(76, 175, 80, 0.5);
+            box-shadow: 0 8px 24px rgba(76, 175, 80, 0.25), 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Difficulty Selector Styles */
+        .difficulty-selector {
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .difficulty-selector:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .difficulty-selector h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .difficulty-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-btn {
+            padding: 8px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            min-width: 70px;
+            backdrop-filter: blur(10px);
+        }
+
+        .difficulty-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .difficulty-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: rgba(0, 212, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .difficulty-btn.active {
+            background: rgba(168, 85, 247, 0.2);
+            border-color: rgba(168, 85, 247, 0.5);
+            color: white;
+            box-shadow: 0 4px 16px rgba(168, 85, 247, 0.25);
+        }
+
+
+
+        /* Difficulty indicator in game stats */
+        .game-stats span:has(#currentDifficulty) {
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        #currentDifficulty {
+            color: #ffffff;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+
+
+
+
+        /* Mobile responsive difficulty selector */
+        @media (max-width: 768px) {
+            .difficulty-selector {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+
+            .difficulty-selector h3 {
+                font-size: 1.3rem;
+                margin-bottom: 12px;
+            }
+
+            .difficulty-buttons {
+                gap: 10px;
+                margin-bottom: 12px;
+            }
+
+            .difficulty-btn {
+                padding: 8px 16px;
+                font-size: 0.8rem;
+                min-width: 70px;
+            }
+
+            .difficulty-info {
+                font-size: 0.8rem;
+            }
+
+
+        }
+
+        @media (max-width: 480px) {
+            .difficulty-buttons {
+                gap: 8px;
+            }
+
+            .difficulty-btn {
+                padding: 6px 12px;
+                font-size: 0.75rem;
+                min-width: 60px;
+            }
+
+
+        }
+
+        /* Game stats mobile optimization */
+        @media (max-width: 768px) {
+            .game-stats {
+                flex-wrap: wrap;
+                gap: 15px;
+                justify-content: center;
+            }
+
+            .game-stats span {
+                font-size: 0.9rem;
+                min-width: fit-content;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .game-stats {
+                gap: 10px;
+            }
+
+            .game-stats span {
+                font-size: 0.8rem;
+            }
+        }
+
+        .game-stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            flex-direction: column;
+        }
+
+        .stat {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .stat:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .game-board {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 20px;
+            perspective: 1000px;
+            max-width: 90vw;
+            overflow-x: auto;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            /* Fix mobile scrolling */
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: none;
+        }
+
+        @media (min-width: 1024px) {
+            .game-board {
+                max-width: none;
+                width: 100%;
+            }
+        }
+
+        .card {
+            width: 70px;
+            height: 70px;
+            margin: 4px;
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s, box-shadow 0.3s ease;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 24px rgba(168, 85, 247, 0.2), 0 4px 12px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .card-front {
+            background: url('card_back.jpg') center/cover no-repeat;
+            transform: rotateY(0deg);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .card-back {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 2rem;
+            transform: rotateY(180deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .card-back img {
+            width: 85%;
+            height: 85%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .card.matched {
+            transform: rotateY(180deg) scale(0.95);
+            opacity: 0.7;
+            cursor: default;
+        }
+        
+        .card.flipped.matched {
+            animation: cardToDeck 0.8s ease-in-out forwards;
+        }
+        
+        @keyframes cardToDeck {
+            0% {
+                transform: rotateY(180deg) scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: rotateY(180deg) scale(0.8) translateY(-20px);
+                opacity: 0.8;
+            }
+            100% {
+                transform: rotateY(180deg) scale(0.1) translateY(-100px);
+                opacity: 0;
+            }
+        }
+        
+        .card img {
+            width: 85%;
+            height: 85%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .card img {
+                width: 90%;
+                height: 90%;
+                border-radius: 6px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .card img {
+                width: 92%;
+                height: 92%;
+                border-radius: 5px;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .card img {
+                width: 95%;
+                height: 95%;
+                border-radius: 4px;
+            }
+        }
+
+        .game-over {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .congrats-box {
+            background: linear-gradient(135deg, rgba(26, 11, 46, 0.95), rgba(45, 27, 78, 0.95));
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 25px;
+            padding: 50px;
+            text-align: center;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), 0 15px 35px rgba(168, 85, 247, 0.2);
+            max-width: 600px;
+            width: 90%;
+            animation: congratsSlideIn 0.6s ease-out;
+            backdrop-filter: blur(20px);
+        }
+        
+        @keyframes congratsSlideIn {
+            0% {
+                transform: translateY(-50px) scale(0.9);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .congrats-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 25px;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .winner-declaration {
+            font-size: 1.6rem;
+            color: #ffffff;
+            margin-bottom: 35px;
+            padding: 20px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .final-scores {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 35px;
+            gap: 25px;
+        }
+        
+        .score-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            padding: 25px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            flex: 1;
+            transition: all 0.3s ease;
+        }
+        
+        .score-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .score-label {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        .score-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Difficulty Change Confirmation Modal */
+        .difficulty-confirm {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .confirm-content {
+            background: linear-gradient(135deg, rgba(26, 11, 46, 0.95), rgba(45, 27, 78, 0.95));
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 25px;
+            padding: 40px;
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), 0 15px 35px rgba(168, 85, 247, 0.2);
+            animation: congratsSlideIn 0.6s ease-out;
+            backdrop-filter: blur(20px);
+        }
+
+        .confirm-content h3 {
+            color: #667eea;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .confirm-content p {
+            color: #e2e8f0;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .confirm-btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 160px;
+        }
+
+        .confirm-yes {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.9), rgba(139, 92, 246, 0.8));
+            color: white;
+            border: 1px solid rgba(168, 85, 247, 0.4);
+        }
+
+        .confirm-yes:hover {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 1), rgba(139, 92, 246, 0.9));
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(168, 85, 247, 0.3);
+        }
+
+        .confirm-no {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .confirm-no:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Mobile responsive styles for confirmation modal */
+        @media (max-width: 768px) {
+            .confirm-content {
+                padding: 30px 20px;
+                max-width: 90%;
+            }
+
+            .confirm-content h3 {
+                font-size: 1.5rem;
+                margin-bottom: 15px;
+            }
+
+            .confirm-content p {
+                font-size: 1rem;
+                margin-bottom: 25px;
+            }
+
+            .confirm-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .confirm-btn {
+                min-width: auto;
+                width: 100%;
+                padding: 12px 20px;
+            }
+        }
+        
+        .congrats-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .congrats-btn {
+            padding: 18px 36px;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        
+        .play-again-btn {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.9), rgba(139, 92, 246, 0.8));
+            color: white;
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            box-shadow: 0 8px 25px rgba(168, 85, 247, 0.3);
+        }
+        
+        .play-again-btn:hover {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 1), rgba(139, 92, 246, 0.9));
+            border-color: rgba(168, 85, 247, 0.6);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 45px rgba(168, 85, 247, 0.4);
+        }
+        
+        .close-btn {
+            background: linear-gradient(135deg, rgba(107, 114, 128, 0.9), rgba(75, 85, 99, 0.8));
+            color: white;
+            border: 1px solid rgba(107, 114, 128, 0.4);
+            box-shadow: 0 8px 25px rgba(107, 114, 128, 0.3);
+        }
+        
+        .close-btn:hover {
+            background: linear-gradient(135deg, rgba(107, 114, 128, 1), rgba(75, 85, 99, 0.9));
+            border-color: rgba(107, 114, 128, 0.6);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 45px rgba(107, 114, 128, 0.4);
+        }
+
+        .game-info {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Desktop layout - side by side arrangement */
+        @media (min-width: 1024px) {
+            .game-container {
+                display: flex;
+                gap: 30px;
+                align-items: flex-start;
+                max-width: 1400px;
+                margin: 0 auto;
+            }
+
+            .game-sidebar {
+                flex: 0 0 300px;
+                position: sticky;
+                top: 20px;
+            }
+
+            .game-main {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .game-board {
+                margin-bottom: 0;
+            }
+
+            .header-content {
+                padding-left: 320px;
+            }
+
+            .game-info {
+                text-align: left;
+                margin-bottom: 0;
+            }
+
+            .game-stats {
+                justify-content: flex-start;
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .game-stats span {
+                text-align: left;
+            }
+
+            .difficulty-selector {
+                text-align: left;
+                margin-bottom: 20px;
+            }
+
+            .difficulty-buttons {
+                justify-content: flex-start;
+            }
+
+            .game-controls {
+                text-align: left;
+            }
+        }
+
+        /* Mobile-specific fixes for scrolling */
+        @media (max-width: 1023px) {
+            .game-sidebar {
+                position: static;
+            }
+            
+            /* Disable backdrop-filter on mobile for better performance */
+            .difficulty-selector,
+            .game-board,
+            .level-info,
+            .game-stats,
+            .btn {
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+            }
+            
+            /* Ensure smooth scrolling on mobile */
+            .game-container {
+                -webkit-overflow-scrolling: touch;
+                overscroll-behavior: none;
+            }
+            
+            /* iOS Safari specific fixes */
+            body {
+                -webkit-overflow-scrolling: touch;
+                -webkit-transform: translateZ(0);
+                transform: translateZ(0);
+                /* Prevent scroll snapping */
+                overscroll-behavior: none;
+                scroll-behavior: auto;
+            }
+            
+            /* Prevent momentum scrolling issues */
+            .game-board {
+                -webkit-overflow-scrolling: touch;
+                overscroll-behavior: none;
+            }
+            
+            /* Additional mobile scroll fixes */
+            html {
+                overscroll-behavior: none;
+                scroll-behavior: auto;
+            }
+            
+            /* Prevent any scroll interference */
+            * {
+                overscroll-behavior: none;
+            }
+        }
+        
+        .game-stats {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            padding: 20px 30px;
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.12), rgba(139, 92, 246, 0.08));
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(168, 85, 247, 0.15), 0 4px 16px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+        }
+        
+        .game-stats span {
+            font-size: 1.1rem;
+            color: #ffffff;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .turn-indicator {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(22, 163, 74, 0.15));
+            border-radius: 15px;
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            box-shadow: 0 4px 16px rgba(34, 197, 94, 0.2);
+        }
+        
+        .turn-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .turn-indicator.bot-turn {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.15));
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            box-shadow: 0 4px 16px rgba(239, 68, 68, 0.2);
+        }
+        
+        .turn-indicator.bot-turn .turn-text {
+            color: #ffffff;
+        }
+
+
+        
+        .game-controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        
+        .btn.primary {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.9), rgba(139, 92, 246, 0.8));
+            color: white;
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            box-shadow: 0 6px 20px rgba(168, 85, 247, 0.3), 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn.primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .btn.primary:hover {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 1), rgba(139, 92, 246, 0.9));
+            border-color: rgba(168, 85, 247, 0.6);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 40px rgba(168, 85, 247, 0.4), 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn.primary:hover::before {
+            left: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .back-button {
+                position: static;
+                margin-bottom: 1rem;
+                justify-content: center;
+                width: fit-content;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .game-board {
+                gap: 5px;
+                padding: 8px;
+            }
+            
+            .card {
+                width: 55px;
+                height: 55px;
+                margin: 3px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+            
+            .game-stats {
+                gap: 15px;
+                padding: 12px 15px;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .game-stats span {
+                font-size: 0.9rem;
+            }
+            
+            .btn.primary {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .game-board {
+                gap: 4px;
+                padding: 8px;
+            }
+            
+            .card {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+            
+            .game-stats {
+                gap: 12px;
+                padding: 10px 12px;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .game-stats span {
+                font-size: 0.8rem;
+            }
+            
+            .btn.primary {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .game-board {
+                gap: 3px;
+                padding: 6px;
+            }
+            
+            .card {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .header p {
+                font-size: 0.9rem;
+            }
+            
+            .game-stats {
+                gap: 10px;
+                padding: 8px 10px;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .game-stats span {
+                font-size: 0.75rem;
+            }
+            
+            .btn.primary {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-shapes">
+        <div class="shape shape-circle"></div>
+        <div class="shape shape-square"></div>
+        <div class="shape shape-triangle"></div>
+        <div class="shape shape-circle"></div>
+        <div class="shape shape-square"></div>
+        <div class="shape shape-triangle"></div>
+        <div class="shape shape-circle"></div>
+        <div class="shape shape-square"></div>
+    </div>
+
+    <div class="header">
+        <div class="header-content">
+            <button class="back-button" onclick="window.location.href='index.html'">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Home
+            </button>
+            <h1>NFT Memory Game</h1>
+            <p>Match the NFT pairs and test your memory against the bot!</p>
+        </div>
+    </div>
+
+    <div class="game-container">
+        <div class="game-sidebar">
+            <div class="game-info">
+                <div class="game-stats">
+                    <span>Moves: <span id="moves">0</span></span>
+                    <span>Time: <span id="time">00:00</span></span>
+                    <span>Player Score: <span id="playerScore">0</span></span>
+                    <span>Bot Score: <span id="botScore">0</span></span>
+                    <span id="turnIndicator" class="turn-indicator">
+                        <span class="turn-text">Your Turn</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="difficulty-selector">
+                <h3>Select Difficulty:</h3>
+                <div class="difficulty-buttons">
+                    <button class="difficulty-btn active" data-difficulty="easy">Easy</button>
+                    <button class="difficulty-btn" data-difficulty="medium">Medium</button>
+                    <button class="difficulty-btn" data-difficulty="hard">Hard</button>
+                    <button class="difficulty-btn" data-difficulty="insane">Insane</button>
+                </div>
+            </div>
+
+            <div class="game-controls">
+                <button class="btn primary" onclick="startGame()">Start New Game</button>
+            </div>
+        </div>
+
+        <div class="game-main">
+            <div class="game-board" id="gameBoard"></div>
+        </div>
+    </div>
+
+    <div class="game-over" id="gameOver" style="display: none;">
+        <div class="congrats-box">
+            <h2 class="congrats-title">Game Complete</h2>
+            
+            <div class="winner-declaration" id="winnerDeclaration">
+                <!-- Winner will be set by JavaScript -->
+            </div>
+            
+            <div class="final-scores">
+                <div class="score-card" id="playerScoreCard">
+                    <div class="score-label">Player Score</div>
+                    <div class="score-value" id="finalPlayerScore">0</div>
+                </div>
+                <div class="score-card" id="botScoreCard">
+                    <div class="score-label">Bot Score</div>
+                    <div class="score-value" id="finalBotScore">0</div>
+                </div>
+            </div>
+            
+            <div class="congrats-buttons">
+                <button class="congrats-btn play-again-btn" onclick="game.reset()">Play Again</button>
+                <button class="congrats-btn close-btn" onclick="document.getElementById('gameOver').style.display='none'">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Difficulty Change Confirmation Modal -->
+    <div class="difficulty-confirm" id="difficultyConfirm" style="display: none;">
+        <div class="confirm-content">
+            <h3>⚠️ Change Difficulty?</h3>
+            <p>Changing the difficulty will reset the current game. Do you wish to proceed?</p>
+            <div class="confirm-buttons">
+                <button class="confirm-btn confirm-yes" id="confirmYes">Yes, Change Difficulty</button>
+                <button class="confirm-btn confirm-no" id="confirmNo">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class MemoryGame {
+            constructor() {
+                this.cards = [];
+                this.flippedCards = [];
+                this.matchedPairs = 0;
+                this.moves = 0;
+                this.gameStarted = false;
+                this.timer = null;
+                this.startTime = null;
+                this.isPlayerTurn = true; // Track whose turn it is
+                this.botCardMap = new Map(); // Bot knows where every card is
+                this.botSuccessRate = 0.32; // Bot starts with 32% success rate
+                this.playerScore = 0; // Track player's score
+                this.botScore = 0; // Track bot's score
+                this.currentDifficulty = 'easy'; // Default difficulty
+                this.pendingDifficultyChange = null; // Store pending difficulty change
+                
+                // Streak limiting system for insane difficulty
+                this.botStreakCount = 0; // Current winning streak
+                this.botStreakLimit = 3; // Max consecutive wins allowed
+                this.botStreakCooldown = 0; // Moves remaining in cooldown
+                this.botStreakCooldownDuration = 7; // Moves to wait after streak limit
+                
+                // Difficulty configurations
+                this.difficultyConfigs = {
+                    easy: {
+                        name: 'Easy',
+                        successRate: { start: 0.15, max: 0.25 },
+                        strategicAttemptRate: { start: 0.10, max: 0.20 },
+                        intentionalMistakeRate: 0.25,
+                        turnDelay: { min: 1200, max: 1800 },
+                        randomMoveFrequency: { min: 0.80, max: 0.90 },
+                        learningRate: { failed: 0.003, success: 0.001 },
+                        perfectMemory: false,
+                        memoryLimit: 6
+                    },
+                    medium: {
+                        name: 'Medium',
+                        successRate: { start: 0.25, max: 0.40 },
+                        strategicAttemptRate: { start: 0.20, max: 0.35 },
+                        intentionalMistakeRate: 0.15,
+                        turnDelay: { min: 800, max: 1200 },
+                        randomMoveFrequency: { min: 0.65, max: 0.80 },
+                        learningRate: { failed: 0.005, success: 0.0015 },
+                        perfectMemory: false,
+                        memoryLimit: 10
+                    },
+                    hard: {
+                        name: 'Hard',
+                        successRate: { start: 0.40, max: 0.60 },
+                        strategicAttemptRate: { start: 0.40, max: 0.60 },
+                        intentionalMistakeRate: 0.08,
+                        turnDelay: { min: 500, max: 800 },
+                        randomMoveFrequency: { min: 0.40, max: 0.60 },
+                        learningRate: { failed: 0.007, success: 0.002 },
+                        perfectMemory: true,
+                        memoryLimit: Infinity
+                    },
+                    insane: {
+                        name: 'Insane',
+                        successRate: { start: 0.60, max: 0.80 },
+                        strategicAttemptRate: { start: 0.70, max: 0.90 },
+                        intentionalMistakeRate: 0.03,
+                        turnDelay: { min: 300, max: 500 },
+                        randomMoveFrequency: { min: 0.10, max: 0.30 },
+                        learningRate: { failed: 0.010, success: 0.003 },
+                        perfectMemory: true,
+                        memoryLimit: Infinity
+                    }
+                };
+                
+                // All JPEG images from NFT projects
+                this.allNFTImages = [
+                    // 10k squad
+                    '10k squad/sneakpeak1.jpeg', '10k squad/sneakpeak2.jpeg', '10k squad/sneakpeak3.jpeg',
+                    '10k squad/sneakpeak4.jpeg', '10k squad/sneakpeak5.jpeg', '10k squad/sneakpeak6.jpeg',
+                    
+                    // blench
+                    'blench/sneakpeak1.jpeg', 'blench/sneakpeak2.jpeg', 'blench/sneakpeak3.jpeg',
+                    'blench/sneakpeak4.jpeg', 'blench/sneakpeak5.jpeg', 'blench/sneakpeak6.jpeg',
+                    
+                    // blocknads
+                    'blocknads/sneakpeak1.jpeg', 'blocknads/sneakpeak2.jpeg', 'blocknads/sneakpeak3.jpeg',
+                    'blocknads/sneakpeak4.jpeg', 'blocknads/sneakpeak5.jpeg', 'blocknads/sneakpeak6.jpeg',
+                    
+                    // bobr
+                    'bobr/sneakpeak1.jpeg', 'bobr/sneakpeak2.jpeg', 'bobr/sneakpeak3.jpeg',
+                    'bobr/sneakpeak4.jpeg', 'bobr/sneakpeak5.jpeg', 'bobr/sneakpeak6.jpeg',
+                    
+                    // breath of estova
+                    'breath of estova/sneakpeak1.jpeg', 'breath of estova/sneakpeak2.jpeg', 'breath of estova/sneakpeak3.jpeg',
+                    'breath of estova/sneakpeak4.jpeg', 'breath of estova/sneakpeak5.jpeg', 'breath of estova/sneakpeak6.jpeg',
+                    
+                    // chewy
+                    'chewy/sneakpeak1.jpeg', 'chewy/sneakpeak2.jpeg', 'chewy/sneakpeak3.jpeg',
+                    'chewy/sneakpeak4.jpeg', 'chewy/sneakpeak5.jpeg', 'chewy/sneakpeak6.jpeg',
+                    
+                    // chog
+                    'chog/sneakpeak1.jpeg', 'chog/sneakpeak2.jpeg', 'chog/sneakpeak3.jpeg',
+                    'chog/sneakpeak4.jpeg', 'chog/sneakpeak5.jpeg', 'chog/sneakpeak6.jpeg',
+                    
+                    // chogstar
+                    'chogstar/sneakpeak1.jpeg', 'chogstar/sneakpeak2.jpeg', 'chogstar/sneakpeak3.jpeg',
+                    'chogstar/sneakpeak4.jpeg', 'chogstar/sneakpeak5.jpeg', 'chogstar/sneakpeak6.jpeg',
+                    
+                    // daks
+                    'daks/sneakpeak1.jpeg', 'daks/sneakpeak2.jpeg', 'daks/sneakpeak3.jpeg',
+                    'daks/sneakpeak4.jpeg', 'daks/sneakpeak5.jpeg', 'daks/sneakpeak6.jpeg',
+                    
+                    // llamao
+                    'llamao/sneakpeak1.jpeg', 'llamao/sneakpeak2.jpeg', 'llamao/sneakpeak3.jpeg',
+                    'llamao/sneakpeak4.jpeg', 'llamao/sneakpeak5.jpeg', 'llamao/sneakpeak6.jpeg',
+                    
+                    // meowwnads
+                    'meowwnads/sneakpeak1.jpeg', 'meowwnads/sneakpeak2.jpeg', 'meowwnads/sneakpeak3.jpeg',
+                    'meowwnads/sneakpeak4.jpeg', 'meowwnads/sneakpeak5.jpeg', 'meowwnads/sneakpeak6.jpeg',
+                    
+                    // monadverse
+                    'monadverse/sneakpeak1.jpeg', 'monadverse/sneakpeak2.jpeg', 'monadverse/sneakpeak3.jpeg',
+                    'monadverse/sneakpeak4.jpeg', 'monadverse/sneakpeak5.jpeg', 'monadverse/sneakpeak6.jpeg',
+                    
+                    // monbeans
+                    'monbeans/sneakpeak1.avif', 'monbeans/sneakpeak2.avif', 'monbeans/sneakpeak3.avif',
+                    'monbeans/sneakpeak4.avif', 'monbeans/sneakpeak5.avif', 'monbeans/sneakpeak6.avif',
+                    
+                    // mondana baddies
+                    'mondana baddies/sneakpeak1.jpeg', 'mondana baddies/sneakpeak2.jpeg', 'mondana baddies/sneakpeak3.jpeg',
+                    'mondana baddies/sneakpeak4.jpeg', 'mondana baddies/sneakpeak5.jpeg', 'mondana baddies/sneakpeak6.jpeg',
+                    
+                    // monshape
+                    'monshape/sneakpeak1.jpeg', 'monshape/sneakpeak2.jpeg', 'monshape/sneakpeak3.jpeg',
+                    'monshape/sneakpeak4.jpeg', 'monshape/sneakpeak5.jpeg', 'monshape/sneakpeak6.jpeg',
+                    
+                    // mopnads
+                    'mopnads/sneakpeak1.jpeg', 'mopnads/sneakpeak2.jpeg', 'mopnads/sneakpeak3.jpeg',
+                    'mopnads/sneakpeak4.jpeg', 'mopnads/sneakpeak5.jpeg', 'mopnads/sneakpeak6.jpeg',
+                    
+                    // mouch
+                    'mouch/sneakpeak1.jpeg', 'mouch/sneakpeak2.jpeg', 'mouch/sneakpeak3.jpeg',
+                    'mouch/sneakpeak4.jpeg', 'mouch/sneakpeak5.jpeg', 'mouch/sneakpeak6.jpeg',
+                    
+                    // overnads
+                    'overnads/sneakpeak1.jpeg', 'overnads/sneakpeak2.jpeg', 'overnads/sneakpeak3.jpeg',
+                    'overnads/sneakpeak4.jpeg', 'overnads/sneakpeak5.jpeg', 'overnads/sneakpeak6.jpeg',
+                    
+                    // owls
+                    'owls/sneakpeak1.jpeg', 'owls/sneakpeak2.jpeg', 'owls/sneakpeak3.jpeg',
+                    'owls/sneakpeak4.jpeg', 'owls/sneakpeak5.jpeg', 'owls/sneakpeak6.jpeg',
+                    
+                    // r3tards
+                    'r3tards/sneakpeak1.jpeg', 'r3tards/sneakpeak2.jpeg', 'r3tards/sneakpeak3.jpeg',
+                    'r3tards/sneakpeak4.jpeg', 'r3tards/sneakpeak5.jpeg', 'r3tards/sneakpeak6.jpeg',
+                    
+                    // realnads
+                    'realnads/sneakpeak1.jpeg', 'realnads/sneakpeak2.jpeg', 'realnads/sneakpeak3.jpeg',
+                    'realnads/sneakpeak4.jpeg', 'realnads/sneakpeak5.jpeg', 'realnads/sneakpeak6.jpeg',
+                    
+                    // roarnads
+                    'roarnads/sneakpeak1.jpeg', 'roarnads/sneakpeak2.jpeg', 'roarnads/sneakpeak3.jpeg',
+                    'roarnads/sneakpeak4.jpeg', 'roarnads/sneakpeak5.jpeg', 'roarnads/sneakpeak6.jpeg',
+                    
+                    // sealuminati
+                    'sealuminati/sneakpeak1.jpeg', 'sealuminati/sneakpeak2.jpeg', 'sealuminati/sneakpeak3.jpeg',
+                    'sealuminati/sneakpeak4.jpeg', 'sealuminati/sneakpeak5.jpeg', 'sealuminati/sneakpeak6.jpeg',
+                    
+                    // skrumpeys
+                    'skrumpeys/sneakpeak1.jpeg', 'skrumpeys/sneakpeak2.jpeg', 'skrumpeys/sneakpeak3.jpeg',
+                    'skrumpeys/sneakpeak4.jpeg', 'skrumpeys/sneakpeak5.jpeg', 'skrumpeys/sneakpeak6.jpeg',
+                    
+                    // slmnd
+                    'slmnd/sneakpeak1.jpeg', 'slmnd/sneakpeak2.jpeg', 'slmnd/sneakpeak3.jpeg',
+                    'slmnd/sneakpeak4.jpeg', 'slmnd/sneakpeak5.jpeg', 'slmnd/sneakpeak6.jpeg',
+                    
+                    // spiky
+                    'spiky/sneakpeak1.jpeg', 'spiky/sneakpeak2.jpeg', 'spiky/sneakpeak3.jpeg',
+                    'spiky/sneakpeak4.jpeg', 'spiky/sneakpeak5.jpeg', 'spiky/sneakpeak6.jpeg'
+                ];
+                
+                this.init();
+            }
+
+            init() {
+                this.createGameBoard();
+                this.updateTurnIndicator();
+                this.setupDifficultySelector();
+                this.applyDifficulty('easy'); // Apply default difficulty
+            }
+
+            setupDifficultySelector() {
+                const difficultyButtons = document.querySelectorAll('.difficulty-btn');
+                difficultyButtons.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const difficulty = e.target.dataset.difficulty;
+                        this.changeDifficulty(difficulty);
+                    });
+                });
+            }
+
+            changeDifficulty(difficulty) {
+                // If game is running, show confirmation dialog
+                if (this.gameStarted) {
+                    this.showDifficultyConfirmation(difficulty);
+                    return;
+                }
+
+                // If no game running, change difficulty immediately
+                this.applyDifficultyChange(difficulty);
+            }
+
+            showDifficultyConfirmation(difficulty) {
+                // Store the difficulty to change to
+                this.pendingDifficultyChange = difficulty;
+                
+                // Show confirmation modal
+                const modal = document.getElementById('difficultyConfirm');
+                modal.style.display = 'flex';
+                
+                // Set up event listeners for confirmation buttons
+                const confirmYes = document.getElementById('confirmYes');
+                const confirmNo = document.getElementById('confirmNo');
+                
+                // Remove any existing listeners to prevent duplicates
+                confirmYes.replaceWith(confirmYes.cloneNode(true));
+                confirmNo.replaceWith(confirmNo.cloneNode(true));
+                
+                // Get fresh references after cloning
+                const newConfirmYes = document.getElementById('confirmYes');
+                const newConfirmNo = document.getElementById('confirmNo');
+                
+                // Add event listeners
+                newConfirmYes.addEventListener('click', () => {
+                    this.confirmDifficultyChange();
+                });
+                
+                newConfirmNo.addEventListener('click', () => {
+                    this.hideDifficultyConfirmation();
+                });
+            }
+
+            hideDifficultyConfirmation() {
+                const modal = document.getElementById('difficultyConfirm');
+                modal.style.display = 'none';
+                this.pendingDifficultyChange = null;
+            }
+
+            confirmDifficultyChange() {
+                if (this.pendingDifficultyChange) {
+                    const difficultyToChange = this.pendingDifficultyChange;
+                    
+                    console.log(`Confirming difficulty change to: ${difficultyToChange}`);
+                    
+                    // Hide the confirmation modal
+                    this.hideDifficultyConfirmation();
+                    
+                    // Apply the difficulty change first
+                    this.applyDifficultyChange(difficultyToChange);
+                    
+                    // Then reset the game with the new difficulty
+                    this.reset();
+                    
+                    console.log(`Difficulty changed to ${difficultyToChange} after confirmation`);
+                    console.log(`Current difficulty is now: ${this.currentDifficulty}`);
+                }
+            }
+
+            applyDifficultyChange(difficulty) {
+                // Update active button
+                document.querySelectorAll('.difficulty-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                const targetButton = document.querySelector(`[data-difficulty="${difficulty}"]`);
+                if (targetButton) {
+                    targetButton.classList.add('active');
+                    console.log(`Button ${difficulty} marked as active`);
+                } else {
+                    console.error(`Button for difficulty ${difficulty} not found!`);
+                }
+
+                // Apply the new difficulty
+                this.applyDifficulty(difficulty);
+                
+                console.log(`Difficulty button updated for: ${difficulty}`);
+            }
+
+
+
+
+
+            applyDifficulty(difficulty) {
+                this.currentDifficulty = difficulty;
+                const config = this.difficultyConfigs[difficulty];
+                
+                // Reset bot stats to difficulty defaults
+                this.botSuccessRate = config.successRate.start;
+                
+                // Update body class for difficulty-specific styling
+                document.body.className = `difficulty-${difficulty}`;
+                
+                console.log(`Difficulty changed to ${difficulty}:`, config);
+            }
+
+
+
+            createGameBoard() {
+                const board = document.getElementById('gameBoard');
+                board.innerHTML = '';
+                
+                const cardCount = this.getCardCount();
+                const pairs = cardCount / 2;
+                const shuffledImages = this.shuffleArray([...this.allNFTImages]);
+                const selectedImages = shuffledImages.slice(0, pairs);
+                
+                // Create pairs of cards
+                const cardPairs = [];
+                selectedImages.forEach(img => {
+                    cardPairs.push(img, img);
+                });
+                
+                this.cards = this.shuffleArray(cardPairs);
+                
+                // Initialize bot's card map - bot knows where every card is
+                this.initializeBotCardMap();
+                
+                // Set grid layout based on card count
+                const gridSize = this.getGridSize(cardCount);
+                board.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+                
+                this.cards.forEach((img, index) => {
+                    const card = this.createCard(img, index);
+                    board.appendChild(card);
+                });
+            }
+
+            initializeBotCardMap() {
+                this.botCardMap.clear();
+                const config = this.difficultyConfigs[this.currentDifficulty];
+                
+                if (config.perfectMemory) {
+                    // Perfect memory - bot knows all card positions
+                    this.cards.forEach((img, index) => {
+                        this.botCardMap.set(img, index);
+                    });
+                    console.log('Bot initialized with perfect memory:', this.botCardMap.size, 'cards');
+                } else {
+                    // Limited memory - bot starts with empty memory
+                    console.log('Bot initialized with limited memory (limit:', config.memoryLimit, 'cards)');
+                }
+            }
+
+            createCard(img, index) {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.dataset.index = index;
+                card.dataset.img = img;
+                
+                card.innerHTML = `
+                    <div class="card-front"></div>
+                    <div class="card-back">
+                        <img src="${img}" alt="NFT" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <span style="display: none;">🎴</span>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => this.flipCard(card));
+                return card;
+            }
+
+            updateTurnIndicator() {
+                const indicator = document.getElementById('turnIndicator');
+                const turnText = indicator.querySelector('.turn-text');
+                
+                if (this.isPlayerTurn) {
+                    indicator.classList.remove('bot-turn');
+                    turnText.textContent = 'Your Turn';
+                } else {
+                    indicator.classList.add('bot-turn');
+                    turnText.textContent = 'Bot\'s Turn';
+                }
+            }
+
+            flipCard(card) {
+                // Start timer only once when game begins
+                if (!this.gameStarted && !this.timer) {
+                    this.startTimer();
+                    this.gameStarted = true;
+                    console.log('Timer started at:', new Date().toLocaleTimeString());
+                }
+                
+                // Prevent flipping if it's not the player's turn
+                if (!this.isPlayerTurn) {
+                    return;
+                }
+                
+                // Prevent flipping if card is already flipped, matched, or if we already have 2 cards flipped
+                if (card.classList.contains('flipped') || 
+                    card.classList.contains('matched') || 
+                    this.flippedCards.length >= 2) {
+                    return;
+                }
+                
+                card.classList.add('flipped');
+                this.flippedCards.push(card);
+                
+                if (this.flippedCards.length === 2) {
+                    this.moves++;
+                    this.updateStats();
+                    this.checkMatch();
+                }
+            }
+
+            checkMatch() {
+                const [card1, card2] = this.flippedCards;
+                const match = card1.dataset.img === card2.dataset.img;
+                
+                if (match) {
+                    this.handleMatch(card1, card2);
+                } else {
+                    this.handleMismatch(card1, card2);
+                }
+            }
+
+            handleMatch(card1, card2) {
+                // Keep the flipped class so cards stay face up during animation
+                this.matchedPairs++;
+                this.updateStats();
+                
+                // Award points based on whose turn it was
+                if (this.isPlayerTurn) {
+                    this.playerScore++;
+                    console.log('Player scored! Current score:', this.playerScore);
+                } else {
+                    this.botScore++;
+                    console.log('Bot scored! Current score:', this.botScore);
+                    // Bot gets a bonus to success rate for good play based on difficulty
+                    const config = this.difficultyConfigs[this.currentDifficulty];
+                    this.botSuccessRate = Math.min(config.successRate.max, 
+                        this.botSuccessRate + config.learningRate.success);
+                    console.log(`Bot rewarded for good play! Success rate: ${(this.botSuccessRate * 100).toFixed(1)}% (max: ${(config.successRate.max * 100).toFixed(1)}%)`);
+                }
+                
+                // Update bot memory with the matched pair
+                this.updateBotMemory(card1, card2, true);
+                
+                // Update bot streak tracking
+                this.updateBotStreak(true);
+                
+                this.flippedCards = [];
+                
+                // Add a delay so players can see their successful match
+                setTimeout(() => {
+                    card1.classList.add('matched');
+                    card2.classList.add('matched');
+                }, 1000); // 0.5 second delay
+                
+                if (this.matchedPairs === this.getCardCount() / 2) {
+                    this.completeGame();
+                } else {
+                    // Successful match grants another turn - don't switch turns
+                    if (!this.isPlayerTurn) {
+                        // Bot gets another turn with consistent delay for better gameplay flow
+                        const delay = 1200; // 1.2 seconds delay before bot's next turn
+                        setTimeout(() => this.botTurn(), delay);
+                    }
+                }
+            }
+
+            handleMismatch(card1, card2) {
+                // Update bot memory with the revealed cards
+                this.updateBotMemory(card1, card2, false);
+                
+                // Update bot streak tracking
+                this.updateBotStreak(false);
+                
+                // If it was the bot's turn, increase its success rate
+                if (!this.isPlayerTurn) {
+                    this.increaseBotSuccessRate();
+                }
+                
+                setTimeout(() => {
+                    card1.classList.remove('flipped');
+                    card2.classList.remove('flipped');
+                    this.flippedCards = [];
+                    
+                    // Switch turns after a failed match
+                    this.isPlayerTurn = !this.isPlayerTurn;
+                    this.updateTurnIndicator(); // Update indicator after mismatch
+                    
+                    if (!this.isPlayerTurn) {
+                        // Bot's turn - add a consistent delay to make it clear
+                        console.log('Switching to bot turn...');
+                        const delay = 1000; // 1 second delay before bot starts its turn
+                        setTimeout(() => this.botTurn(), delay);
+                    }
+                }, 1000);
+            }
+
+            increaseBotSuccessRate() {
+                const config = this.difficultyConfigs[this.currentDifficulty];
+                // Increase bot success rate based on difficulty after unsuccessful match
+                this.botSuccessRate = Math.min(config.successRate.max, 
+                    this.botSuccessRate + config.learningRate.failed);
+                console.log(`Bot success rate increased to: ${(this.botSuccessRate * 100).toFixed(1)}% (max: ${(config.successRate.max * 100).toFixed(1)}%)`);
+            }
+
+            completeGame() {
+                this.gameStarted = false;
+                this.stopTimer();
+                
+                // Calculate final time
+                const finalTime = this.formatTime(this.gameTime);
+                
+                // Determine winner
+                let winnerText, winnerClass;
+                if (this.playerScore > this.botScore) {
+                    winnerText = "Player Wins";
+                    winnerClass = "winner";
+                } else if (this.botScore > this.playerScore) {
+                    winnerText = "Bot Wins";
+                    winnerClass = "";
+                } else {
+                    winnerText = "It's a Tie";
+                    winnerClass = "";
+                }
+                
+                // Populate congratulations box
+                document.getElementById('winnerDeclaration').textContent = winnerText;
+                document.getElementById('winnerDeclaration').className = `winner-declaration ${winnerClass}`;
+                
+                // Update final scores
+                document.getElementById('finalPlayerScore').textContent = this.playerScore;
+                document.getElementById('finalBotScore').textContent = this.botScore;
+                
+                // Show congratulations box
+                document.getElementById('gameOver').style.display = 'flex';
+                
+                console.log('Game completed!');
+                console.log('Final scores - Player:', this.playerScore, 'Bot:', this.botScore);
+                console.log('Winner:', winnerText);
+            }
+
+            saveHighScore(moves, time) {
+                const highScores = JSON.parse(localStorage.getItem('memoryGameHighScores') || '[]');
+                highScores.push({ moves, time, date: new Date().toISOString() });
+                highScores.sort((a, b) => a.moves - b.moves); // Sort by moves (lower is better)
+                highScores.splice(10); // Keep only top 10
+                localStorage.setItem('memoryGameHighScores', JSON.stringify(highScores));
+            }
+
+            startTimer() {
+                // Clear any existing timer first
+                if (this.timer) {
+                    clearInterval(this.timer);
+                    this.timer = null;
+                }
+                
+                this.startTime = Date.now();
+                this.gameTime = 0;
+                this.timer = setInterval(() => {
+                    this.gameTime = Date.now() - this.startTime;
+                    const minutes = Math.floor(this.gameTime / 60000);
+                    const seconds = Math.floor((this.gameTime % 60000) / 1000);
+                    document.getElementById('time').textContent = 
+                        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }, 1000);
+            }
+
+            stopTimer() {
+                if (this.timer) {
+                    clearInterval(this.timer);
+                    this.timer = null;
+                    console.log('Timer stopped at:', new Date().toLocaleTimeString());
+                }
+            }
+
+            shouldLimitBotStreak() {
+                // Only apply streak limiting to insane difficulty
+                if (this.currentDifficulty !== 'insane') {
+                    return false;
+                }
+                
+                // If bot has reached streak limit, start cooldown
+                if (this.botStreakCount >= this.botStreakLimit) {
+                    this.botStreakCooldown = this.botStreakCooldownDuration;
+                    console.log(`Bot reached streak limit (${this.botStreakLimit})! Starting ${this.botStreakCooldownDuration} move cooldown.`);
+                }
+                
+                // Return true if in cooldown (for performance reduction)
+                return this.botStreakCooldown > 0;
+            }
+
+            updateBotStreak(isMatch) {
+                if (this.currentDifficulty !== 'insane') {
+                    return; // Only track streaks for insane difficulty
+                }
+                
+                if (isMatch && !this.isPlayerTurn) {
+                    // Bot made a match
+                    this.botStreakCount++;
+                    console.log(`Bot streak: ${this.botStreakCount}/${this.botStreakLimit}`);
+                } else if (!isMatch && !this.isPlayerTurn) {
+                    // Bot failed to match, reset streak
+                    this.botStreakCount = 0;
+                    console.log('Bot streak reset due to failed match');
+                }
+                
+                // Decrease cooldown if active
+                if (this.botStreakCooldown > 0) {
+                    this.botStreakCooldown--;
+                    if (this.botStreakCooldown === 0) {
+                        console.log('Bot streak cooldown ended! Back to full power.');
+                    } else {
+                        console.log(`Bot streak cooldown: ${this.botStreakCooldown} moves remaining`);
+                    }
+                }
+            }
+
+            updateStats() {
+                document.getElementById('moves').textContent = this.moves;
+                document.getElementById('playerScore').textContent = this.playerScore;
+                document.getElementById('botScore').textContent = this.botScore;
+            }
+            
+            formatTime(milliseconds) {
+                const minutes = Math.floor(milliseconds / 60000);
+                const seconds = Math.floor((milliseconds % 60000) / 1000);
+                return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            getCardCount() {
+                // All levels now have 48 cards (24 pairs) for a perfect 8x6 grid
+                return 48;
+            }
+
+            getGridSize(cardCount) {
+                // 6x8 grid on mobile, 8x6 grid on desktop
+                if (window.innerWidth <= 768) {
+                    return 6; // 6 columns for mobile (6x8 grid)
+                } else {
+                    return 8; // 8 columns for desktop (8x6 grid)
+                }
+            }
+
+            shuffleArray(array) {
+                const shuffled = [...array];
+                for (let i = shuffled.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                }
+                return shuffled;
+            }
+
+            updateBotMemory(card1, card2, isMatch) {
+                const img1 = card1.dataset.img;
+                const img2 = card2.dataset.img;
+                const config = this.difficultyConfigs[this.currentDifficulty];
+                
+                if (isMatch) {
+                    // Remove matched cards from bot's card map
+                    this.botCardMap.delete(img1);
+                    this.botCardMap.delete(img2);
+                    console.log('Bot removed matched cards from map:', img1, img2);
+                    console.log('Remaining cards in map:', this.botCardMap.size);
+                } else {
+                    // For limited memory difficulties, bot learns from revealed cards
+                    if (!config.perfectMemory) {
+                        // Add revealed cards to bot's memory (limited by memoryLimit)
+                        if (this.botCardMap.size < config.memoryLimit) {
+                            this.botCardMap.set(img1, card1.dataset.index);
+                            this.botCardMap.set(img2, card2.dataset.index);
+                            console.log('Bot learned new cards:', img1, img2);
+                        } else {
+                            // Remove oldest memory if at limit
+                            const firstKey = this.botCardMap.keys().next().value;
+                            this.botCardMap.delete(firstKey);
+                            this.botCardMap.set(img1, card1.dataset.index);
+                            this.botCardMap.set(img2, card2.dataset.index);
+                            console.log('Bot replaced old memory with new cards:', img1, img2);
+                        }
+                    }
+                }
+            }
+
+            getAllAvailableCards() {
+                const allCards = [];
+                for (let i = 0; i < this.cards.length; i++) {
+                    const card = document.querySelector(`[data-index="${i}"]`);
+                    if (card) {
+                        allCards.push({
+                            element: card,
+                            index: i,
+                            img: card.dataset.img,
+                            isFlipped: card.classList.contains('flipped'),
+                            isMatched: card.classList.contains('matched')
+                        });
+                    }
+                }
+                
+                // Filter for truly available cards
+                return allCards.filter(card => 
+                    !card.isFlipped && !card.isMatched && !this.flippedCards.includes(card.element)
+                );
+            }
+
+            botTurn() {
+                if (this.matchedPairs >= this.getCardCount() / 2) return;
+                
+                const config = this.difficultyConfigs[this.currentDifficulty];
+                
+                console.log('=== BOT TURN STARTING ===');
+                console.log('Difficulty:', this.currentDifficulty);
+                console.log('Current matched pairs:', this.matchedPairs);
+                console.log('Bot card map size:', this.botCardMap.size);
+                
+                // Bot has a chance to make a successful match based on difficulty
+                const minAttemptRate = config.strategicAttemptRate.start;
+                const maxAttemptRate = config.strategicAttemptRate.max;
+                let actualAttemptRate = Math.min(maxAttemptRate, 
+                    Math.max(minAttemptRate, this.botSuccessRate));
+                
+                // Apply streak limiting for insane difficulty
+                if (this.shouldLimitBotStreak()) {
+                    // Reduce attempt rate during cooldown (more subtle)
+                    actualAttemptRate *= 0.6; // 40% reduction instead of 70%
+                    console.log(`Bot streak limited! Attempt rate reduced to ${(actualAttemptRate * 100).toFixed(1)}%`);
+                }
+                
+                const shouldAttemptMatch = Math.random() < actualAttemptRate;
+                
+                let card1, card2;
+                
+                if (shouldAttemptMatch) {
+                    // Bot will try to make a match, but it might still fail
+                    console.log('Bot attempting to make a match (attempt rate: ' + (actualAttemptRate * 100).toFixed(1) + '%, success rate: ' + (this.botSuccessRate * 100).toFixed(1) + '%)');
+                    
+                    const availableCards = this.getAllAvailableCards();
+                    if (availableCards.length >= 2) {
+                        // Bot tries to find a pair, but might not succeed
+                        const shuffled = this.shuffleArray([...availableCards]);
+                        const firstCard = shuffled[0];
+                        
+                        // Look for a matching card
+                        for (let i = 1; i < shuffled.length; i++) {
+                            if (shuffled[i].img === firstCard.img) {
+                                card1 = firstCard.element;
+                                card2 = shuffled[i].element;
+                                console.log('Bot found potential matching pair:', firstCard.img);
+                                break;
+                            }
+                        }
+                        
+                        // Even when bot finds a pair, there's a chance it will make a mistake based on difficulty
+                        if (card1 && card2) {
+                            let mistakeRate = config.intentionalMistakeRate;
+                            
+                            // Increase mistake rate during streak cooldown for insane difficulty
+                            if (this.shouldLimitBotStreak()) {
+                                mistakeRate = Math.min(0.5, mistakeRate * 2); // Double the mistake rate, max 50%
+                                console.log(`Bot streak limited! Mistake rate increased to ${(mistakeRate * 100).toFixed(1)}%`);
+                            }
+                            
+                            const willActuallySucceed = Math.random() > mistakeRate;
+                            if (!willActuallySucceed) {
+                                console.log(`Bot found pair but will make a mistake (${(mistakeRate * 100).toFixed(1)}% mistake rate)`);
+                                // Bot intentionally picks a wrong second card
+                                const wrongCard = shuffled.find(card => card.img !== firstCard.img);
+                                if (wrongCard) {
+                                    card1 = firstCard.element;
+                                    card2 = wrongCard.element;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                // If no match attempt or match attempt failed, make random moves
+                if (!card1 || !card2) {
+                    console.log('Bot making random moves');
+                    const availableCards = this.getAllAvailableCards();
+                    if (availableCards.length >= 2) {
+                        const shuffled = this.shuffleArray([...availableCards]);
+                        card1 = shuffled[0].element;
+                        card2 = shuffled[1].element;
+                        
+                        // Even random moves have a small chance of success
+                        if (card1.dataset.img === card2.dataset.img) {
+                            console.log('Bot got lucky with random selection!');
+                        }
+                        
+                        console.log('Bot selected random cards:', 
+                            `Index ${shuffled[0].index} (${shuffled[0].img})`, 
+                            `Index ${shuffled[1].index} (${shuffled[1].img})`
+                        );
+                    }
+                }
+                
+                if (card1 && card2 && card1 !== card2) {
+                    console.log('Bot will flip cards:', 
+                        `Card1: ${card1.dataset.img}`, 
+                        `Card2: ${card2.dataset.img}`
+                    );
+                    
+                    // Bot flips the cards using consistent, slower timing for better visibility
+                    // Consistent timing across all difficulties for better gameplay flow
+                    const firstCardDelay = 800; // 800ms delay before first card
+                    const secondCardDelay = 1600; // 1600ms delay before second card
+                    
+                    setTimeout(() => {
+                        this.botFlipCard(card1);
+                    }, firstCardDelay);
+                    
+                    setTimeout(() => {
+                        this.botFlipCard(card2);
+                    }, secondCardDelay);
+                } else {
+                    console.log('Bot couldn\'t find valid cards to flip');
+                }
+                
+                console.log('=== BOT TURN ENDING ===');
+            }
+
+            botFlipCard(card) {
+                // Bot version of flipCard that bypasses turn check
+                if (card.classList.contains('flipped') || 
+                    card.classList.contains('matched') || 
+                    this.flippedCards.length >= 2) {
+                    return;
+                }
+                
+                card.classList.add('flipped');
+                this.flippedCards.push(card);
+                
+                if (this.flippedCards.length === 2) {
+                    this.checkMatch();
+                }
+            }
+
+            reset() {
+                console.log('=== GAME RESET ===');
+                this.cards = [];
+                this.flippedCards = [];
+                this.matchedPairs = 0;
+                this.moves = 0;
+                this.gameStarted = false;
+                this.isPlayerTurn = true;
+                
+                // Clear bot memory completely
+                this.botCardMap.clear();
+                
+                // Reset bot success rate to current difficulty default
+                const config = this.difficultyConfigs[this.currentDifficulty];
+                this.botSuccessRate = config.successRate.start;
+                
+                this.playerScore = 0; // Reset player score
+                this.botScore = 0; // Reset bot score
+                
+                // Reset streak tracking
+                this.botStreakCount = 0;
+                this.botStreakCooldown = 0;
+                
+                console.log('Bot memory cleared');
+                console.log(`Bot success rate reset to: ${(config.successRate.start * 100).toFixed(1)}% (${this.currentDifficulty} difficulty)`);
+                console.log('Scores reset to 0');
+                console.log('Bot streak tracking reset');
+                
+                this.stopTimer();
+                
+                document.getElementById('time').textContent = '00:00';
+                document.getElementById('moves').textContent = '0';
+                document.getElementById('playerScore').textContent = '0';
+                document.getElementById('botScore').textContent = '0';
+                document.getElementById('gameOver').style.display = 'none';
+                
+                this.createGameBoard();
+                this.updateTurnIndicator();
+                console.log('=== RESET COMPLETE ===');
+            }
+        }
+
+        let game;
+
+        function startGame() {
+            if (!game) {
+                game = new MemoryGame();
+            } else {
+                game.reset();
+            }
+        }
+
+        function resetGame() {
+            if (game) {
+                game.reset();
+            }
+        }
+
+        // Initialize game when page loads
+        window.addEventListener('load', () => {
+            game = new MemoryGame();
+        });
+    </script>
+</body>
+</html>

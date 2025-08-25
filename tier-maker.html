@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monad NFT Tier Maker - NFTemple</title>
+    <link rel="icon" type="image/webp" href="favicon.webp">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="tier-maker.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="background-shapes">
+        <div class="shape shape-circle"></div>
+        <div class="shape shape-square"></div>
+        <div class="shape shape-triangle"></div>
+        <div class="shape shape-circle"></div>
+        <div class="shape shape-square"></div>
+        <div class="shape shape-triangle"></div>
+        <div class="shape shape-circle"></div>
+        <div class="shape shape-square"></div>
+    </div>
+    
+    <div class="container">
+        <div class="tier-maker-header">
+            <button class="back-button" onclick="window.location.href='index.html'">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Home
+            </button>
+            
+            <div class="tier-maker-title">
+                <h1>Tier Maker</h1>
+                <p>Create your ultimate Monad NFT Tier list!</p>
+                <input type="text" id="tier-list-title" placeholder="what should we call this list?" maxlength="50">
+            </div>
+            
+            <div class="tier-maker-actions">
+                <button class="action-btn reset-btn" onclick="resetTierList()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                        <path d="M21 3v5h-5"/>
+                        <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                        <path d="M3 21v-5h5"/>
+                    </svg>
+                    Reset
+                </button>
+                <button class="action-btn share-btn" onclick="shareOnTwitter()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/>
+                    </svg>
+                    Share on X
+                </button>
+            </div>
+        </div>
+
+        <div class="tier-maker-content" id="tier-list-container">
+            <!-- Sidebar Layout: Tiers on Left, Projects on Right -->
+            <div class="sidebar-layout">
+                <!-- Tier Rows Section -->
+                <div class="tiers-section">
+                    <div class="tier-rows">
+                        <div class="tier-row" data-tier="S">
+                            <div class="tier-label tier-s">S</div>
+                            <div class="tier-content" data-tier="S"></div>
+                        </div>
+                        
+                        <div class="tier-row" data-tier="A">
+                            <div class="tier-label tier-a">A</div>
+                            <div class="tier-content" data-tier="A"></div>
+                        </div>
+                        
+                        <div class="tier-row" data-tier="B">
+                            <div class="tier-label tier-b">B</div>
+                            <div class="tier-content" data-tier="B"></div>
+                        </div>
+                        
+                        <div class="tier-row" data-tier="C">
+                            <div class="tier-label tier-c">C</div>
+                            <div class="tier-content" data-tier="C"></div>
+                        </div>
+                        
+                        <div class="tier-row" data-tier="D">
+                            <div class="tier-label tier-d">D</div>
+                            <div class="tier-content" data-tier="D"></div>
+                        </div>
+                        
+                        <div class="tier-row" data-tier="E">
+                            <div class="tier-label tier-e">E</div>
+                            <div class="tier-content" data-tier="E"></div>
+                        </div>
+                        
+                        <div class="tier-row" data-tier="F">
+                            <div class="tier-label tier-f">F</div>
+                            <div class="tier-content" data-tier="F"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projects Pool Section -->
+                <div class="projects-section">
+                    <div class="projects-pool">
+                        <h3>Available Projects</h3>
+                        <p class="projects-hint desktop-hint">Drag projects to the tiers on the left</p>
+                        <p class="projects-hint mobile-hint" style="display: none;">Tap a project, then tap a tier to place it</p>
+                        <div class="projects-grid" id="unranked-projects">
+                            <!-- Projects will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="tier-maker.js"></script>
+</body>
+</html>
