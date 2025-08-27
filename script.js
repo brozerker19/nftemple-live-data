@@ -102,7 +102,7 @@ function updateMultipleVolumes(volumeData) {
     Object.entries(volumeData).forEach(([projectId, volume]) => {
         updateProjectVolume(projectId, volume);
     });
-    console.log('Updated volume for:', Object.keys(volumeData).join(', '));
+    console.log('Updated volume data for:', Object.keys(volumeData).join(', '));
 }
 
 // Project data
@@ -2646,6 +2646,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize badges
     initializeBadges();
     
+    // Initialize hot collections table
+    initializeHotCollectionsTable();
+    
     // Initialize filter and sort functionality
     initializeSorting();
     
@@ -3073,20 +3076,6 @@ function populateProjectData(project, projectId) {
                         <span class="fp-label">FP:</span>
                         <span class="fp-value">--</span>
                     </div>
-                    <div class="volume-data">
-                        <div class="data-row">
-                            <span class="data-label">24h Vol:</span>
-                            <span class="volume-24h">--</span>
-                        </div>
-                        <div class="data-row">
-                            <span class="data-label">Total Vol:</span>
-                            <span class="total-volume">--</span>
-                        </div>
-                        <div class="data-row">
-                            <span class="data-label">24h Sales:</span>
-                            <span class="sales-24h">--</span>
-                        </div>
-                    </div>
                 </div>
             `;
             
@@ -3352,7 +3341,7 @@ function initializeProjectFloorPrices() {
         }
     }
     
-    // Function to update floor price display with enhanced data
+    // Function to update floor price display
     function updateFloorPriceDisplay(container, data) {
         // Update floor price
         const fpValue = container.querySelector('.fp-value');
@@ -3361,26 +3350,6 @@ function initializeProjectFloorPrices() {
         } else {
             fpValue.textContent = '--';
         }
-        
-        // Update volume data if available
-        const volume24hElement = container.querySelector('.volume-24h');
-        if (volume24hElement && data) {
-            volume24hElement.textContent = data.volume24hFormatted || 'N/A';
-        }
-        
-        // Update total volume if available
-        const totalVolumeElement = container.querySelector('.total-volume');
-        if (totalVolumeElement && data && data.totalVolume) {
-            totalVolumeElement.textContent = data.totalVolume.formatted || 'N/A';
-        }
-        
-        // Update 24h sales if available
-        const sales24hElement = container.querySelector('.sales-24h');
-        if (sales24hElement && data && data.sales24h) {
-            sales24hElement.textContent = data.sales24h.formatted || 'N/A';
-        }
-        
-
     }
     
     // Function to refresh all floor prices for current project
@@ -3414,5 +3383,116 @@ function initializeProjectFloorPrices() {
     // Refresh every 15 minutes
     setInterval(refreshProjectFloorPrices, 15 * 60 * 1000);
 }
+
+// Hot Collections Table Functionality
+async function initializeHotCollectionsTable() {
+    const backendUrl = window.API_CONFIG?.apiBaseUrl || 'http://localhost:3000';
+    const tbody = document.getElementById('hot-collections-tbody');
+    
+    if (!tbody) return;
+    
+    // Show loading state
+    tbody.innerHTML = '<tr><td colspan="4" class="hot-collections-loading">Loading hot collections...</td></tr>';
+    
+    try {
+        // Fetch volume data for all projects
+        const hotCollections = await fetchHotCollectionsData(backendUrl);
+        
+        // Sort by 24h volume (descending) and take top 10
+        const sortedCollections = hotCollections
+            .filter(collection => collection.volume24h > 0)
+            .sort((a, b) => b.volume24h - a.volume24h)
+            .slice(0, 10);
+        
+        // Populate the table
+        populateHotCollectionsTable(sortedCollections);
+        
+    } catch (error) {
+        console.error('Error loading hot collections:', error);
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #ef4444; padding: 20px;">Failed to load hot collections</td></tr>';
+    }
+}
+
+async function fetchHotCollectionsData(backendUrl) {
+    const hotCollections = [];
+    
+    // Get all projects that have Magic Eden links (collections with trading data)
+    for (const [projectId, project] of Object.entries(projects)) {
+        if (project.magicEdenLinks && project.magicEdenLinks.length > 0) {
+            // Get the main collection (first one) for volume data
+            const mainCollection = project.magicEdenLinks[0];
+            const contractAddress = mainCollection.url.split('/').pop();
+            
+            try {
+                const volumeData = await fetchCollectionVolumeData(backendUrl, contractAddress);
+                if (volumeData && volumeData.volume24h) {
+                    hotCollections.push({
+                        projectId,
+                        projectName: project.name,
+                        projectIcon: project.pfp,
+                        volume24h: volumeData.volume24h,
+                        volume24hFormatted: volumeData.volume24hFormatted,
+                        change24h: volumeData.change24h || 0
+                    });
+                }
+            } catch (error) {
+                console.warn(`Failed to fetch volume data for ${projectId}:`, error);
+            }
+        }
+    }
+    
+    return hotCollections;
+}
+
+async function fetchCollectionVolumeData(backendUrl, contractAddress) {
+    try {
+        const response = await fetch(`${backendUrl}/floor/${contractAddress}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(`Error fetching volume data for ${contractAddress}:`, error);
+        return null;
+    }
+}
+
+function populateHotCollectionsTable(collections) {
+    const tbody = document.getElementById('hot-collections-tbody');
+    
+    if (collections.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #a855f7; padding: 20px;">No trading data available</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = collections.map((collection, index) => {
+        const rank = index + 1;
+        const changeClass = collection.change24h > 0 ? 'positive' : collection.change24h < 0 ? 'negative' : 'neutral';
+        const changeSymbol = collection.change24h > 0 ? '+' : '';
+        const changeText = collection.change24h !== 0 ? `${changeSymbol}${collection.change24h.toFixed(1)}%` : '0%';
+        
+        return `
+            <tr>
+                <td class="collection-rank">${rank}</td>
+                <td>
+                    <div class="collection-info-cell">
+                        <img src="${collection.projectIcon}" alt="${collection.projectName}" class="collection-icon-small" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iOCIgZmlsbD0iIzMzMyIvPgo8c3ZnIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjOTk5IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNOCA4YzEuNjYgMCAzLTEuMzQgMy0zcy0xLjM0LTMtMy0zLTMgMS4zNC0zIDMgMS4zNCAzIDMgM3ptMCAyYy0xLjY3IDAtNSAwLjgtNSAydjJoMTB2LTJjMC0xLjItMy4zMy0yLTUtMnoiLz4KPC9zdmc+Cjwvc3ZnPg=='">
+                        <span class="collection-name-cell">${collection.projectName}</span>
+                    </div>
+                </td>
+                <td class="volume-value">${collection.volume24hFormatted || '$0'}</td>
+                <td class="volume-change ${changeClass}">${changeText}</td>
+            </tr>
+        `;
+    }).join('');
+}
+
+// Refresh hot collections table periodically
+setInterval(() => {
+    if (document.getElementById('homepage').classList.contains('active')) {
+        initializeHotCollectionsTable();
+    }
+}, 15 * 60 * 1000); // Refresh every 15 minutes
 
  
