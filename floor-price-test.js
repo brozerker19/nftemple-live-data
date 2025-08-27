@@ -239,7 +239,7 @@ const testCollections = {
     },
     "mecha-box": {
         name: "MECHA BOX",
-        contractAddress: "0x3db6c11474893689cdb9d7cdedc251532cadf32b",
+        contractAddress: "mecha_box_mint_pass",
         description: "Grants 1 x GTD Whitelist"
     }
 };

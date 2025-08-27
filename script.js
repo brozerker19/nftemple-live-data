@@ -545,7 +545,7 @@ const projects = {
             collections: [
                 {
                     name: "Sealuminati Testnetooor",
-                    description: "50 NFTs = Access to Inner Circle DC Chat + <REDACTED>",
+                    description: "50 NFTs = Access to Inner Circle + REDACTED",
                     icon: "sealuminati/testnetoor.gif"
                 },
                 {
