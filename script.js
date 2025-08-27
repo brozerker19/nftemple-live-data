@@ -3073,6 +3073,20 @@ function populateProjectData(project, projectId) {
                         <span class="fp-label">FP:</span>
                         <span class="fp-value">--</span>
                     </div>
+                    <div class="volume-data">
+                        <div class="data-row">
+                            <span class="data-label">24h Vol:</span>
+                            <span class="volume-24h">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Total Vol:</span>
+                            <span class="total-volume">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">24h Sales:</span>
+                            <span class="sales-24h">--</span>
+                        </div>
+                    </div>
                 </div>
             `;
             
@@ -3338,14 +3352,35 @@ function initializeProjectFloorPrices() {
         }
     }
     
-    // Function to update floor price display
+    // Function to update floor price display with enhanced data
     function updateFloorPriceDisplay(container, data) {
+        // Update floor price
         const fpValue = container.querySelector('.fp-value');
         if (fpValue && data && data.floorPriceFormatted) {
             fpValue.textContent = data.floorPriceFormatted;
         } else {
             fpValue.textContent = '--';
         }
+        
+        // Update volume data if available
+        const volume24hElement = container.querySelector('.volume-24h');
+        if (volume24hElement && data) {
+            volume24hElement.textContent = data.volume24hFormatted || 'N/A';
+        }
+        
+        // Update total volume if available
+        const totalVolumeElement = container.querySelector('.total-volume');
+        if (totalVolumeElement && data && data.totalVolume) {
+            totalVolumeElement.textContent = data.totalVolume.formatted || 'N/A';
+        }
+        
+        // Update 24h sales if available
+        const sales24hElement = container.querySelector('.sales-24h');
+        if (sales24hElement && data && data.sales24h) {
+            sales24hElement.textContent = data.sales24h.formatted || 'N/A';
+        }
+        
+
     }
     
     // Function to refresh all floor prices for current project

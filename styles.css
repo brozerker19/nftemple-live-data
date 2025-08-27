@@ -1159,7 +1159,7 @@ header p {
     border-radius: 12px;
     border: 1px solid rgba(168, 85, 247, 0.2);
     background: rgba(168, 85, 247, 0.05);
-    min-width: 200px;
+    min-width: 240px;
 }
 
 .collection-floor-price:hover {
@@ -1207,6 +1207,62 @@ header p {
 
 .fp-value {
     color: #ffffff;
+}
+
+/* Volume Data Styling */
+.volume-data {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 8px;
+    padding: 8px;
+    background: rgba(168, 85, 247, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(168, 85, 247, 0.1);
+}
+
+.data-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    line-height: 1.2;
+}
+
+.data-label {
+    color: #a855f7;
+    font-weight: 500;
+    min-width: 60px;
+}
+
+.volume-24h,
+.total-volume,
+.sales-24h {
+    color: #ffffff;
+    font-weight: 600;
+    text-align: right;
+    min-width: 40px;
+}
+
+/* Responsive adjustments for volume data */
+@media (max-width: 768px) {
+    .collection-floor-price {
+        min-width: 180px;
+        padding: 10px 12px;
+    }
+    
+    .volume-data {
+        padding: 6px;
+        margin-top: 6px;
+    }
+    
+    .data-row {
+        font-size: 0.7rem;
+    }
+    
+    .data-label {
+        min-width: 50px;
+    }
 }
 
 /* Project Name Overlay */
