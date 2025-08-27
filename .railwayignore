@@ -43,6 +43,29 @@ VOLUME_SCRAPING_README.md
 .env.test.local
 .env.production.local
 
+# Large files in root directory
+card_back.jpg
+discord_logo.png
+favicon.webp
+floor-price-test.html
+floor-price-test.js
+js-test.html
+magic_eden logo.png
+memory-game.html
+tier-maker.css
+tier-maker.html
+tier-maker.js
+whitelist-checker.css
+whitelist-checker.html
+whitelist-checker.js
+x_logo.png
+scraper.js
+
+# Only keep essential files for Railway
+!server.js
+!package.json
+!package-lock.json
+
 # OS files
 .DS_Store
 Thumbs.db
