@@ -1122,43 +1122,43 @@ const projects = {
                 name: "Nath",
                 role: "Community Team",
                 pfp: "10k squad/nath pfp.jpg",
-                xLink: ""
+                xLink: "https://x.com/NathCaDiHoL"
              },
              {
                 name: "Pablo",
                 role: "Community Team",
                 pfp: "10k squad/pablo pfp.jpg",
-                xLink: ""
+                xLink: "https://x.com/pabloo669"
              },
              {
                 name: "Get0",
                 role: "Community Team",
                 pfp: "10k squad/get0 pfp.jpg",
-                xLink: ""
+                xLink: "https://x.com/su9uru9et0"
              },
              {
                 name: "Incognito",
                 role: "Community Team",
                 pfp: "10k squad/incognito pfp.jpg",
-                xLink: ""
+                xLink: "https://x.com/Rushna71"
              },
              {
                 name: "Aphrodite",
                 role: "Community Team",
                 pfp: "10k squad/aphrodite pfp.jpg",
-                xLink: ""
+                xLink: "https://x.com/a_aphrodiite"
              },
              {
                 name: "Demon",
                 role: "Community Team",
                 pfp: "10k squad/demon pfp.jpg",
-                xLink: ""
+                xLink: "https://x.com/demon__10k"
              },
              {
-                name: "Jerry",
+                name: "Ibuycrypto",
                 role: "Community Team",
-                pfp: "10k squad/jerry pfp.jpg",
-                xLink: ""
+                pfp: "10k squad/ibuycrypto pfp.jpg",
+                xLink: "https://x.com/gang_shiba"
              }
          ]
      },
@@ -1946,6 +1946,11 @@ const projects = {
         description: "just a bunch of r3tards on the Monad blockchain",
         banner: "r3tards/x banner.jpeg",
         pfp: "r3tards/x pfp.jpg",
+        collectionPfp: {
+            "r3tards": "r3tards/r3tards.jpeg",
+            "r3tardv3rs3": "r3tards/retardverse.jpeg",
+            "Monad Nurse": "r3tards/nurse.jpeg"
+        },
         xLink: "https://x.com/r3tardsNFT",
         discordLink: "",
         websiteLink: "https://www.r3tards.club/",
@@ -2954,7 +2959,7 @@ function populateProjectData(project, projectId) {
                 }
             } else if (projectId === 'slmnd') {
                 if (collection.name.toLowerCase().includes('genesis')) {
-                    iconSrc = 'slmnd/slmnd.jpeg';
+                    iconSrc = 'slmnd/genesis.avif';
                 } else if (collection.name.toLowerCase().includes('pass')) {
                     iconSrc = 'slmnd/slmnd.jpeg';
                 }
@@ -2981,16 +2986,22 @@ function populateProjectData(project, projectId) {
                     iconSrc = 'owls/owls.jpeg';
                 }
             } else if (projectId === 'mopnads') {
-                if (collection.name.toLowerCase().includes('pass') || collection.name.toLowerCase().includes('mopnads')) {
-                    iconSrc = 'mopnads/mopnads.jpeg';
+                if (collection.name.toLowerCase().includes('mop')) {
+                    iconSrc = 'mopnads/mop.jpeg';
                 }
             } else if (projectId === 'breath of estova') {
-                if (collection.name.toLowerCase().includes('pass') || collection.name.toLowerCase().includes('breath')) {
-                    iconSrc = 'breath of estova/breath of estova.jpeg';
+                if (collection.name.toLowerCase().includes('eggs')) {
+                    iconSrc = 'breath of estova/eggs.jpeg';
+                } else if (collection.name.toLowerCase().includes('token')) {
+                    iconSrc = 'breath of estova/token.jpeg';
                 }
             } else if (projectId === 'r3tards') {
-                if (collection.name.toLowerCase().includes('pass') || collection.name.toLowerCase().includes('r3tards')) {
+                if (collection.name.toLowerCase().includes('r3tards') && !collection.name.toLowerCase().includes('r3tardv3rs3')) {
                     iconSrc = 'r3tards/r3tards.jpeg';
+                } else if (collection.name.toLowerCase().includes('r3tardv3rs3')) {
+                    iconSrc = 'r3tards/retardverse.jpeg';
+                } else if (collection.name.toLowerCase().includes('nurse')) {
+                    iconSrc = 'r3tards/nurse.jpeg';
                 }
             } else if (projectId === 'bobr') {
                 if (collection.name.toLowerCase().includes('pass') || collection.name.toLowerCase().includes('bobr')) {
@@ -3021,20 +3032,22 @@ function populateProjectData(project, projectId) {
                     iconSrc = 'skrumpeys/dn.jpeg';
                 }
             } else if (projectId === 'daks') {
-                if (collection.name.toLowerCase().includes('pass') || collection.name.toLowerCase().includes('daks')) {
-                    iconSrc = 'daks/daks.jpeg';
+                if (collection.name.toLowerCase().includes('fantasies')) {
+                    iconSrc = 'daks/fantasies.jpeg';
+                } else if (collection.name.toLowerCase().includes('thedaks')) {
+                    iconSrc = 'daks/thedaks.avif';
                 }
             } else if (projectId === 'flappy mouch') {
                 if (collection.name.toLowerCase().includes('pass') || collection.name.toLowerCase().includes('flappy')) {
                     iconSrc = 'flappy mouch/flappy mouch.jpeg';
                 }
             } else if (projectId === 'monpunks') {
-                if (collection.name.toLowerCase().includes('pass') || collection.name.toLowerCase().includes('monpunks')) {
-                    iconSrc = 'monpunks/monpunks.jpeg';
+                if (collection.name.toLowerCase().includes('badge')) {
+                    iconSrc = 'monpunks/badge.avif';
                 }
             } else if (projectId === 'mon amurz') {
-                if (collection.name.toLowerCase().includes('pass') || collection.name.toLowerCase().includes('amurz')) {
-                    iconSrc = 'mon amurz/mon amurz.jpeg';
+                if (collection.name.toLowerCase().includes('minimurz')) {
+                    iconSrc = 'mon amurz/minimurz.avif';
                 }
             } else if (projectId === 'roarnads') {
                 if (collection.name.toLowerCase().includes('pass') || collection.name.toLowerCase().includes('roar')) {
