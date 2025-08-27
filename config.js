@@ -6,7 +6,7 @@ const config = {
     },
     // Production (Railway)
     production: {
-        apiBaseUrl: 'https://nftemple-live-data-production.up.railway.app/' // ⚠️ REPLACE WITH YOUR ACTUAL RAILWAY URL!
+        apiBaseUrl: 'https://nftemple-live-data-production.up.railway.app' // ✅ Your Railway API URL
     }
 };
 
