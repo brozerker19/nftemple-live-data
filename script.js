@@ -412,7 +412,7 @@ const projects = {
             {
                 name: "NadAlyan",
                 role: "Social Media Artist",
-                pfp: "spiky/nad pfp.jpg",
+                pfp: "spiky/NadAlyan pfp.jpg",
                 xLink: "https://x.com/NadAlyan308"
             },
             {
