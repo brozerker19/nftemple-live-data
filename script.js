@@ -545,6 +545,11 @@ const projects = {
             collections: [
                 {
                     name: "Sealuminati Testnetooor",
+                    description: "50 NFTs = Access to Inner Circle DC Chat + <REDACTED>",
+                    icon: "sealuminati/testnetoor.gif"
+                },
+                {
+                    name: "Sealuminati Testnetooor",
                     description: "10 NFTs = 1 x GTD Whitelist",
                     icon: "sealuminati/testnetoor.gif"
                 },
@@ -3029,7 +3034,7 @@ function populateProjectData(project, projectId) {
                 if (collection.name.toLowerCase().includes('skrumpets')) {
                     iconSrc = 'skrumpeys/skrumpets.jpeg';
                 } else if (collection.name.toLowerCase().includes('dn')) {
-                    iconSrc = 'skrumpeys/dn.jpeg';
+                    iconSrc = 'skrumpeys/DN.jpeg';
                 }
             } else if (projectId === 'daks') {
                 if (collection.name.toLowerCase().includes('fantasies')) {
